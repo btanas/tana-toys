@@ -374,7 +374,6 @@ function renderProducts(filter) {
                     <button class="add-to-cart-btn" onclick="event.stopPropagation();addToCart(${p.id})" title="${t('add_to_cart')}">+</button>
                 </div>
             </div>
-            <button class="product-quick-add" onclick="event.stopPropagation();addToCart(${p.id})">${t('add_to_cart')}</button>
         </div>`;
     }).join('');
 
