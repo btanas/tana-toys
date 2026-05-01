@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tana Toys — Варіанти логотипу</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #f0ede8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 20px;
+            gap: 40px;
+        }
+
+        h1 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #888;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .variants {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .variant-card {
+            background: white;
+            border-radius: 24px;
+            padding: 48px 52px 36px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+            min-width: 300px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 2.5px solid transparent;
+        }
+        .variant-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.13);
+        }
+
+        .variant-num {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #bbb;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+            line-height: 1.05;
+        }
+
+        .logo-tana {
+            font-size: 52px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo-toys {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .choose-btn {
+            padding: 10px 28px;
+            border-radius: 100px;
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.03em;
+        }
+        .choose-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        /* Variant descriptions */
+        .variant-desc {
+            font-size: 12px;
+            color: #aaa;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Оберіть варіант логотипу</h1>
+
+    <div class="variants">
+
+        <!-- ===== VARIANT 1 — Coral & Warm Brown ===== -->
+        <div class="variant-card">
+            <span class="variant-num">Варіант 1</span>
+            <div class="logo-wrap">
+                <!-- Bear SVG — coral orange -->
+                <svg width="88" height="88" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left ear -->
+                    <circle cx="26" cy="29" r="13" stroke="#E8673A" stroke-width="3.8" fill="white"/>
+                    <!-- Right ear -->
+                    <circle cx="74" cy="29" r="13" stroke="#E8673A" stroke-width="3.8" fill="white"/>
+                    <!-- Head -->
+                    <circle cx="50" cy="57" r="31" stroke="#E8673A" stroke-width="3.8" fill="white"/>
+                    <!-- Left eye -->
+                    <circle cx="40" cy="51" r="3" fill="#E8673A"/>
+                    <!-- Right eye -->
+                    <circle cx="60" cy="51" r="3" fill="#E8673A"/>
+                    <!-- Nose -->
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#E8673A"/>
+                    <!-- Smile -->
+                    <path d="M44 67 Q50 74 56 67" stroke="#E8673A" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div class="logo-text">
+                    <span class="logo-tana" style="color:#E8673A">Tana</span>
+                    <span class="logo-toys" style="color:#C45830">toys</span>
+                </div>
+            </div>
+            <span class="variant-desc">Коралово-помаранчевий</span>
+            <button class="choose-btn" style="background:#E8673A;color:white">Обрати цей</button>
+        </div>
+
+        <!-- ===== VARIANT 2 — Sage Green & Terracotta (natural/earthy) ===== -->
+        <div class="variant-card">
+            <span class="variant-num">Варіант 2</span>
+            <div class="logo-wrap">
+                <!-- Bear SVG — sage green -->
+                <svg width="88" height="88" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left ear -->
+                    <circle cx="26" cy="29" r="13" stroke="#8BA07A" stroke-width="3.8" fill="white"/>
+                    <!-- Right ear -->
+                    <circle cx="74" cy="29" r="13" stroke="#8BA07A" stroke-width="3.8" fill="white"/>
+                    <!-- Head -->
+                    <circle cx="50" cy="57" r="31" stroke="#8BA07A" stroke-width="3.8" fill="white"/>
+                    <!-- Left eye -->
+                    <circle cx="40" cy="51" r="3" fill="#8BA07A"/>
+                    <!-- Right eye -->
+                    <circle cx="60" cy="51" r="3" fill="#8BA07A"/>
+                    <!-- Nose -->
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#8BA07A"/>
+                    <!-- Smile -->
+                    <path d="M44 67 Q50 74 56 67" stroke="#8BA07A" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div class="logo-text">
+                    <span class="logo-tana" style="color:#D4785A">Tana</span>
+                    <span class="logo-toys" style="color:#7A8A6A">toys</span>
+                </div>
+            </div>
+            <span class="variant-desc">Шавлія та теракота</span>
+            <button class="choose-btn" style="background:#D4785A;color:white">Обрати цей</button>
+        </div>
+
+        <!-- ===== VARIANT 3 — Lavender & Coral ===== -->
+        <div class="variant-card">
+            <span class="variant-num">Варіант 3</span>
+            <div class="logo-wrap">
+                <!-- Bear SVG — lavender purple -->
+                <svg width="88" height="88" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left ear -->
+                    <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <!-- Right ear -->
+                    <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <!-- Head -->
+                    <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <!-- Left eye -->
+                    <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                    <!-- Right eye -->
+                    <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                    <!-- Nose -->
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                    <!-- Smile -->
+                    <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div class="logo-text">
+                    <span class="logo-tana" style="color:#E8673A">Tana</span>
+                    <span class="logo-toys" style="color:#A07EC8">toys</span>
+                </div>
+            </div>
+            <span class="variant-desc">Лаванда та корал</span>
+            <button class="choose-btn" style="background:#A07EC8;color:white">Обрати цей</button>
+        </div>
+
+    </div>
+
+    <script>
+        document.querySelectorAll('.choose-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.variant-card').forEach(c => {
+                    c.style.border = '2.5px solid transparent';
+                });
+                const card = btn.closest('.variant-card');
+                const color = btn.style.background;
+                card.style.border = `2.5px solid ${color}`;
+                btn.textContent = '✓ Обрано';
+            });
+        });
+    </script>
+
+</body>
+</html>

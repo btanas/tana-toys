@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tana Toys — Розвивальні іграшки для дітей</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="#" class="logo">
+                    <svg class="logo-bear" width="46" height="46" viewBox="0 0 100 100" fill="none">
+                        <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                        <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                        <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                        <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                        <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                        <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                        <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                    </svg>
+                    <div class="logo-text-wrap">
+                        <span class="logo-tana">Tana</span>
+                        <span class="logo-toys">toys</span>
+                    </div>
+                </a>
+                <nav class="nav">
+                    <a href="#products" data-i18n="nav_catalog">Каталог</a>
+                    <a href="#about" data-i18n="nav_about">Про нас</a>
+                    <a href="#reviews" data-i18n="nav_reviews">Відгуки</a>
+                    <a href="#contact" data-i18n="nav_contacts">Контакти</a>
+                </nav>
+
+                <!-- LANGUAGE SWITCHER -->
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn" id="langBtn">
+                        <span id="langCurrent">UA</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button class="lang-option" data-lang="et"><span class="lc">ET</span> Eesti</button>
+                        <button class="lang-option" data-lang="en"><span class="lc">EN</span> English</button>
+                        <button class="lang-option" data-lang="lt"><span class="lc">LT</span> Lietuvių</button>
+                        <button class="lang-option" data-lang="lv"><span class="lc">LV</span> Latviešu</button>
+                        <button class="lang-option" data-lang="ru"><span class="lc">RU</span> Русский</button>
+                        <button class="lang-option" data-lang="uk"><span class="lc">UA</span> Українська</button>
+                    </div>
+                </div>
+
+                <!-- HAMBURGER -->
+                <button class="hamburger" id="hamburgerBtn" aria-label="Меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <button class="cart-btn" id="cartBtn" aria-label="Кошик">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <a href="#" class="logo">
+                <svg width="38" height="38" viewBox="0 0 100 100" fill="none">
+                    <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                    <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                    <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div class="logo-text-wrap">
+                    <span class="logo-tana">Tana</span>
+                    <span class="logo-toys">toys</span>
+                </div>
+            </a>
+            <button class="mobile-menu-close" id="mobileMenuClose">✕</button>
+        </div>
+        <nav class="mobile-nav">
+            <a href="#products" class="mobile-nav-link" data-i18n="nav_catalog">Каталог</a>
+            <a href="#about" class="mobile-nav-link" data-i18n="nav_about">Про нас</a>
+            <a href="#reviews" class="mobile-nav-link" data-i18n="nav_reviews">Відгуки</a>
+            <a href="#contact" class="mobile-nav-link" data-i18n="nav_contacts">Контакти</a>
+        </nav>
+        <div class="mobile-menu-langs">
+            <button class="mobile-lang-btn" data-lang="et">🇪🇪 Eesti</button>
+            <button class="mobile-lang-btn" data-lang="en">🇬🇧 English</button>
+            <button class="mobile-lang-btn" data-lang="lt">🇱🇹 Lietuvių</button>
+            <button class="mobile-lang-btn" data-lang="lv">🇱🇻 Latviešu</button>
+            <button class="mobile-lang-btn" data-lang="ru">🇷🇺 Русский</button>
+            <button class="mobile-lang-btn" data-lang="uk">🇺🇦 Українська</button>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-inner">
+                <div class="hero-content">
+                    <div class="hero-badge" data-i18n="hero_badge">✦ Розвивай через гру!</div>
+                    <h1 data-i18n-html="hero_title">Іграшки, що <span class="accent">надихають</span><br>маленьких дослідників</h1>
+                    <p class="hero-sub" data-i18n="hero_sub">Якісні розвивальні набори для дітей від 1 до 8 років. Навчання через творчість та гру.</p>
+                    <div class="hero-actions">
+                        <a href="#products" class="btn btn-primary" data-i18n="hero_btn1">Переглянути каталог</a>
+                        <a href="#about" class="btn btn-ghost" data-i18n="hero_btn2">Дізнатись більше →</a>
+                    </div>
+                    <div class="hero-trust">
+                        <div class="trust-item"><span>⭐ 4.9</span> <span data-i18n="trust_rating">рейтинг</span></div>
+                        <div class="trust-sep">·</div>
+                        <div class="trust-item">1500+ <span data-i18n="trust_families">щасливих сімей</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="products-section" id="products">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2 data-i18n="products_title">Наші набори</h2>
+                <p data-i18n="products_sub">Кожен набір ретельно розроблений для розвитку різних навичок</p>
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h3 data-i18n="feat1_title">Безпечні матеріали</h3>
+                        <p data-i18n="feat1_sub">Сертифіковані та екологічні</p>
+                    </div>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h3 data-i18n="feat2_title">З любов'ю</h3>
+                        <p data-i18n="feat2_sub">Розроблено педагогами</p>
+                    </div>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="3" width="15" height="13"/>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                            <circle cx="5.5" cy="18.5" r="2.5"/>
+                            <circle cx="18.5" cy="18.5" r="2.5"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h3 data-i18n="feat3_title">Швидка доставка</h3>
+                        <p data-i18n="feat3_sub">По всій Україні</p>
+                    </div>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                    </div>
+                    <div class="feature-text">
+                        <h3 data-i18n="feat4_title">Повернення 14 днів</h3>
+                        <p data-i18n="feat4_sub">Без зайвих питань</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-inner">
+                <div class="about-text">
+                    <h2 class="about-title">Створено з любов'ю до дітей та повагою до науки</h2>
+                    <p class="about-role">Дефектолог · Психолог · Засновниця</p>
+                    <p class="about-lead">Ви коли-небудь бачили, як сяють очі дитини, коли у неї вперше виходить скласти складний пазл чи розгадати логічну загадку? Я спостерігаю це щодня.</p>
+                    <p class="about-body">Я — Ольга, дефектолог, психолог і засновниця майстерні дидактичних ігор. Моя мета — перетворити навчання на пригоду, де немає місця нудьзі. У свої розробки я вкладаю не лише знання з психології, а й частинку своєї душі.</p>
+                    <blockquote class="about-quote">«Мої ігри — це міст між складною програмою навчання та природною цікавістю дитини».</blockquote>
+                    <div class="about-values">
+                        <div class="about-value">
+                            <span class="about-value-num">1</span>
+                            <div><strong>Безпека</strong> — тільки сертифікований еко-пластик.</div>
+                        </div>
+                        <div class="about-value">
+                            <span class="about-value-num">2</span>
+                            <div><strong>Розвиток</strong> — стимулюємо моторику, логіку та мовлення одночасно.</div>
+                        </div>
+                        <div class="about-value">
+                            <span class="about-value-num">3</span>
+                            <div><strong>Довговічність</strong> — наші ігри не бояться падінь чи активних дитячих рук.</div>
+                        </div>
+                    </div>
+                    <p class="about-cta">Приєднуйтесь до нашої спільноти свідомих батьків. Давайте грати з користю!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ECO MATERIALS -->
+    <section class="eco-section">
+        <div class="container">
+            <div class="eco-inner">
+                <div class="eco-text animate-on-scroll">
+                    <div class="eco-badge">🌿 Екологічно чисто</div>
+                    <h2 class="eco-title">Матеріали, яким<br>можна довіряти</h2>
+                    <p class="eco-lead">Наші іграшки виготовлені з біорозкладних матеріалів на основі зерна — без шкідливих речовин, без відходів, без ризику для вашої дитини.</p>
+                    <div class="eco-pillars">
+                        <div class="eco-pillar">
+                            <div class="eco-pillar-icon">🌾</div>
+                            <div>
+                                <strong>Натуральна сировина</strong>
+                                <span>Кукурудзяний крохмаль та молочна кислота (PLA)</span>
+                            </div>
+                        </div>
+                        <div class="eco-pillar">
+                            <div class="eco-pillar-icon">♻️</div>
+                            <div>
+                                <strong>Біорозкладний матеріал</strong>
+                                <span>Повністю розкладається в природі без токсинів</span>
+                            </div>
+                        </div>
+                        <div class="eco-pillar">
+                            <div class="eco-pillar-icon">✅</div>
+                            <div>
+                                <strong>Безпека підтверджена</strong>
+                                <span>Жодних важких металів, барвників та ароматизаторів</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="eco-image-wrap animate-on-scroll">
+                    <img src="eco-materials.webp" alt="Еко матеріали" class="eco-img">
+                    <div class="eco-img-glow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="reviews-section" id="reviews">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2 data-i18n="reviews_title">Що кажуть батьки</h2>
+                <p data-i18n="reviews_sub">Реальні відгуки від наших покупців</p>
+            </div>
+            <div class="reviews-grid">
+                <div class="review-card animate-on-scroll">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Замовила логічний сортер — вражена якістю! Пластик PLA дуже приємний на дотик, без запаху, краї акуратно відшліфовані. Донька 2,5 роки грає щодня і вже навчилась складати всі фігури."</p>
+                    <div class="review-author">
+                        <div class="review-avatar">О</div>
+                        <div class="review-info">
+                            <strong>Оксана М.</strong>
+                            <span>Таллін · 2 тижні тому</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card animate-on-scroll">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Як педагог рекомендую ці ігри своїм батькам. Матеріал екологічний, деталі чіткі й не ламаються. Видно, що зроблено з головою — кожна гра справді навчає, а не просто розважає."</p>
+                    <div class="review-author">
+                        <div class="review-avatar">І</div>
+                        <div class="review-info">
+                            <strong>Ірина Б., вчитель</strong>
+                            <span>Нарва · 1 місяць тому</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card animate-on-scroll">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Купили набір для сина 4 роки — не могли відтягнути від столу! Пластик міцний, впав кілька разів — нічого не зламалось. Замовили ще один набір для доньки."</p>
+                    <div class="review-author">
+                        <div class="review-avatar">В</div>
+                        <div class="review-info">
+                            <strong>Василь Т.</strong>
+                            <span>Гаркув · 3 тижні тому</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card animate-on-scroll">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Зверніть увагу на якість друку — деталі рівні, без задирок. Мій син одразу помітив що це «не з магазину» і запитав як це зроблено 😄 Тепер хоче сам навчитись на 3D-принтері!"</p>
+                    <div class="review-author">
+                        <div class="review-avatar">Л</div>
+                        <div class="review-info">
+                            <strong>Людмила К.</strong>
+                            <span>Рига · 2 місяці тому</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card animate-on-scroll">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Шукала розвивальні ігри без токсичних матеріалів — знайшла! PLA пластик безпечний, перевірила склад. Дочка-алергік грає без жодних реакцій. Дуже дякую!"</p>
+                    <div class="review-author">
+                        <div class="review-avatar">Т</div>
+                        <div class="review-info">
+                            <strong>Тетяна Р.</strong>
+                            <span>Вільнюс · 1 місяць тому</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card animate-on-scroll">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Подарували на день народження племіннику 5 років. Він і батьки в захваті. Гра розвиває логіку і дрібну моторику одночасно. Якість на рівні — нічого не злипається, деталі підходять ідеально."</p>
+                    <div class="review-author">
+                        <div class="review-avatar">А</div>
+                        <div class="review-info">
+                            <strong>Андрій С.</strong>
+                            <span>Таллін · 3 тижні тому</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <svg class="logo-bear" width="46" height="46" viewBox="0 0 100 100" fill="none">
+                            <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="#111827"/>
+                            <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="#111827"/>
+                            <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="#111827"/>
+                            <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                            <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                            <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                            <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                        </svg>
+                        <div class="logo-text-wrap">
+                            <span class="logo-tana">Tana</span>
+                            <span class="logo-toys">toys</span>
+                        </div>
+                    </a>
+                    <p data-i18n="footer_brand">Розвивальні іграшки для дітей від 1 до 8 років</p>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/tana__toys?igsh=b3F1NjJveHdsN2Js&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <circle cx="12" cy="12" r="4"/>
+                                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Facebook">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.tiktok.com/@tana.toys.tallinn?_r=1" target="_blank" rel="noopener" aria-label="TikTok">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4 data-i18n="footer_col1_title">Магазин</h4>
+                        <a href="#products" data-i18n="footer_link_catalog">Каталог</a>
+                        <a href="#" data-i18n="footer_link_new">Нові надходження</a>
+                        <a href="#" data-i18n="footer_link_sales">Знижки та акції</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4 data-i18n="footer_col2_title">Інформація</h4>
+                        <a href="#" data-i18n="footer_link_about">Про нас</a>
+                        <a href="#" data-i18n="footer_link_delivery">Доставка і оплата</a>
+                        <a href="#" data-i18n="footer_link_returns">Повернення</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4 data-i18n="footer_col3_title">Контакти</h4>
+                        <a href="mailto:tanatoys.info@gmail.com">tanatoys.info@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-i18n="footer_copyright">© 2026 Tana Toys — Розвивальні іграшки для дітей</p>
+                <div class="footer-bottom-links">
+                    <a href="#" data-i18n="footer_privacy">Політика конфіденційності</a>
+                    <a href="#" data-i18n="footer_terms">Умови використання</a>
+                    <a href="admin.html" class="admin-link">⚙</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART DRAWER -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-header">
+            <h3 data-i18n="cart_title">Кошик</h3>
+            <button class="cart-close-btn" id="cartClose">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <div class="cart-body" id="cartBody">
+            <div class="cart-empty-state">
+                <div class="cart-empty-icon">🛒</div>
+                <p data-i18n="cart_empty_title">Кошик порожній</p>
+                <span data-i18n="cart_empty_sub">Додай товари, щоб почати покупки</span>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter">
+            <div class="cart-total-row">
+                <span data-i18n="cart_total_label">Разом:</span>
+                <strong id="cartTotalPrice">0 грн</strong>
+            </div>
+            <button class="btn btn-primary" id="checkoutBtn" style="width:100%;margin-top:12px" data-i18n="cart_checkout">Оформити замовлення</button>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- CHECKOUT MODAL -->
+    <div class="checkout-overlay" id="checkoutOverlay">
+        <div class="checkout-modal" id="checkoutModal">
+            <button class="checkout-close" id="checkoutClose">✕</button>
+            <div class="checkout-inner" id="checkoutInner">
+
+                <!-- Left: form -->
+                <div class="checkout-form-side">
+                    <h2 class="checkout-title">Оформлення замовлення</h2>
+
+                    <div class="checkout-section-label">Контактні дані</div>
+                    <div class="checkout-row">
+                        <div class="checkout-field">
+                            <label>Ім'я</label>
+                            <input type="text" id="coFirstName" placeholder="Ім'я" autocomplete="given-name">
+                        </div>
+                        <div class="checkout-field">
+                            <label>Прізвище</label>
+                            <input type="text" id="coLastName" placeholder="Прізвище" autocomplete="family-name">
+                        </div>
+                    </div>
+                    <div class="checkout-row">
+                        <div class="checkout-field">
+                            <label>Email</label>
+                            <input type="email" id="coEmail" placeholder="email@example.com" autocomplete="email">
+                        </div>
+                        <div class="checkout-field">
+                            <label>Телефон</label>
+                            <input type="tel" id="coPhone" placeholder="+372 5xxx xxxx" autocomplete="tel">
+                        </div>
+                    </div>
+
+                    <div class="checkout-section-label" style="margin-top:20px">Спосіб доставки</div>
+                    <div class="delivery-options">
+                        <label class="delivery-option">
+                            <input type="radio" name="delivery" value="omniva" checked onchange="updateDeliveryUI()">
+                            <div class="delivery-option-box">
+                                <div class="delivery-logo omniva-logo">OMNIVA</div>
+                                <div class="delivery-name">Omniva pakiautomaat</div>
+                                <div class="delivery-price">€2.90</div>
+                            </div>
+                        </label>
+                        <label class="delivery-option">
+                            <input type="radio" name="delivery" value="smartpost" onchange="updateDeliveryUI()">
+                            <div class="delivery-option-box">
+                                <div class="delivery-logo smartpost-logo">SmartPOST</div>
+                                <div class="delivery-name">SmartPOST pakiautomaat</div>
+                                <div class="delivery-price">€2.90</div>
+                            </div>
+                        </label>
+                        <label class="delivery-option">
+                            <input type="radio" name="delivery" value="dpd" onchange="updateDeliveryUI()">
+                            <div class="delivery-option-box">
+                                <div class="delivery-logo dpd-logo">DPD</div>
+                                <div class="delivery-name">DPD pakiautomaat</div>
+                                <div class="delivery-price">€2.90</div>
+                            </div>
+                        </label>
+                        <label class="delivery-option">
+                            <input type="radio" name="delivery" value="courier" onchange="updateDeliveryUI()">
+                            <div class="delivery-option-box">
+                                <div class="delivery-logo courier-logo">🚚</div>
+                                <div class="delivery-name">Kullerteenus (kulleriga)</div>
+                                <div class="delivery-price">€4.90</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="checkout-row" style="margin-top:16px">
+                        <div class="checkout-field">
+                            <label>Місто</label>
+                            <select id="coCity">
+                                <option value="">— Оберіть місто —</option>
+                                <option>Tallinn</option>
+                                <option>Tartu</option>
+                                <option>Narva</option>
+                                <option>Pärnu</option>
+                                <option>Kohtla-Järve</option>
+                                <option>Viljandi</option>
+                                <option>Rakvere</option>
+                                <option>Maardu</option>
+                                <option>Sillamäe</option>
+                                <option>Keila</option>
+                                <option>Haapsalu</option>
+                                <option>Võru</option>
+                            </select>
+                        </div>
+                        <div class="checkout-field" id="terminalField">
+                            <label id="terminalLabel">Назва пакетомату</label>
+                            <input type="text" id="coTerminal" placeholder="напр. Ülemiste keskus">
+                        </div>
+                    </div>
+
+                    <div class="checkout-field" id="addressField" style="display:none;margin-top:0">
+                        <label>Адреса доставки</label>
+                        <input type="text" id="coAddress" placeholder="Вулиця, будинок, квартира">
+                    </div>
+
+                    <div class="checkout-section-label" style="margin-top:20px">Спосіб оплати</div>
+                    <div class="payment-info-box">
+                        <div class="payment-info-icon">🏦</div>
+                        <div>
+                            <div class="payment-info-title">Pangaülekanne (банківський переказ)</div>
+                            <div class="payment-info-note">Реквізити для оплати ви отримаєте після підтвердження замовлення</div>
+                        </div>
+                    </div>
+
+                    <div class="checkout-field" style="margin-top:12px">
+                        <label>Коментар до замовлення <span style="font-weight:400;color:#999">(необов'язково)</span></label>
+                        <textarea id="coComment" rows="2" placeholder="Побажання, уточнення..."></textarea>
+                    </div>
+
+                    <button class="checkout-submit-btn" id="checkoutSubmitBtn" onclick="submitOrder()">
+                        Підтвердити замовлення
+                    </button>
+                </div>
+
+                <!-- Right: order summary -->
+                <div class="checkout-summary-side">
+                    <div class="checkout-section-label">Ваше замовлення</div>
+                    <div id="checkoutItems" class="checkout-items"></div>
+                    <div class="checkout-summary-totals">
+                        <div class="checkout-summary-row">
+                            <span>Товари</span>
+                            <span id="coSubtotal">€0.00</span>
+                        </div>
+                        <div class="checkout-summary-row">
+                            <span>Доставка</span>
+                            <span id="coDeliveryPrice">€2.90</span>
+                        </div>
+                        <div class="checkout-summary-row checkout-summary-total">
+                            <span>Разом</span>
+                            <span id="coTotal">€0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SUCCESS STEP -->
+            <div id="checkoutSuccess" style="display:none;padding:48px 40px;text-align:center;max-width:560px;margin:0 auto">
+                <div style="width:72px;height:72px;background:#d4f0e8;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px">✓</div>
+                <h2 style="font-size:24px;font-weight:800;color:#1a1a2e;margin-bottom:8px">Замовлення прийнято!</h2>
+                <p style="color:#888;font-size:14px;margin-bottom:28px">Ми надіслали підтвердження на вашу пошту. Будь ласка, здійсніть оплату.</p>
+
+                <div style="background:#f4f2ef;border-radius:16px;padding:24px;text-align:left;margin-bottom:24px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                        <div style="font-size:12px;font-weight:800;color:#888;letter-spacing:0.08em;text-transform:uppercase">Реквізити для оплати</div>
+                        <div style="display:flex;align-items:center;gap:8px;background:white;border-radius:8px;padding:6px 12px">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/swedbank.svg" alt="Swedbank" width="20" height="20" style="filter:brightness(0) saturate(100%) invert(38%) sepia(99%) saturate(1200%) hue-rotate(1deg) brightness(105%)">
+                            <span style="font-weight:800;font-size:13px;color:#FF5000">Swedbank</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:12px">
+                        <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px">
+                            <span style="color:#888">IBAN</span>
+                            <span style="font-weight:700;font-family:monospace;font-size:15px" id="successIBAN">EE00 0000 0000 0000 0000</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px">
+                            <span style="color:#888">Отримувач</span>
+                            <span style="font-weight:600" id="successRecipient">Ім'я Прізвище</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px">
+                            <span style="color:#888">Сума</span>
+                            <span style="font-weight:800;color:#E8673A;font-size:16px" id="successAmount">€0.00</span>
+                        </div>
+                        <div style="height:1px;background:#e8e4df"></div>
+                        <div style="display:flex;justify-content:space-between;font-size:14px">
+                            <span style="color:#888">Призначення платежу</span>
+                            <span style="font-weight:700" id="successOrderNum">#TT-0000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="font-size:13px;color:#aaa;margin-bottom:28px">Після отримання оплати ми відправимо ваше замовлення та надішлемо трекінг-номер.</p>
+                <button onclick="closeCheckout()" style="padding:14px 40px;background:#E8673A;color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer">Закрити</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PRODUCT MODAL -->
+    <div class="product-modal-overlay" id="productModalOverlay">
+        <div class="product-modal" id="productModal">
+            <button class="product-modal-close" id="productModalClose">✕</button>
+            <div class="product-modal-inner">
+                <div class="product-modal-media" id="productModalMedia"></div>
+                <div class="product-modal-info">
+                    <div class="product-modal-badge" id="productModalBadge"></div>
+                    <h2 class="product-modal-name" id="productModalName"></h2>
+                    <div class="product-modal-rating" id="productModalRating"></div>
+                    <div class="product-modal-price" id="productModalPrice"></div>
+                    <p class="product-modal-desc" id="productModalDesc"></p>
+                    <button class="product-modal-cart-btn" id="productModalCartBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        <span data-i18n="add_to_cart">До кошика</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

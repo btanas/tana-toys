@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tana Toys — Адмін панель</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary: #E8673A;
+            --primary-light: #fff3ee;
+            --purple: #A07EC8;
+            --green: #2d8a6a;
+            --green-light: #d4f0e8;
+            --bg: #f4f2ef;
+            --card-bg: #fff;
+            --text: #1a1a2e;
+            --text-muted: #888;
+            --border: #e8e4df;
+            --danger: #e53e3e;
+            --danger-light: #fff5f5;
+            --shadow: 0 2px 16px rgba(0,0,0,0.08);
+            --radius: 14px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        #loginScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fef3e8 0%, #f0ebf8 100%);
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 52px 48px;
+            box-shadow: 0 8px 48px rgba(0,0,0,0.12);
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .login-logo-text { line-height: 1.05; text-align: left; }
+        .login-logo-tana { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 36px; color: var(--primary); letter-spacing: -0.5px; display: block; }
+        .login-logo-toys { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px; color: var(--purple); letter-spacing: 3.5px; text-transform: lowercase; display: block; }
+
+        .login-card h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+        .login-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; }
+
+        .login-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 16px;
+        }
+        .login-input:focus { border-color: var(--primary); }
+        .login-input.error { border-color: var(--danger); }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .login-btn:hover { opacity: 0.9; }
+        .login-btn:active { transform: scale(0.98); }
+
+        .login-error { color: var(--danger); font-size: 13px; margin-top: 12px; display: none; }
+
+        /* ===== MAIN LAYOUT ===== */
+        #adminScreen { display: none; }
+
+        .admin-header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+        }
+
+        .admin-header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .admin-header-logo-text { line-height: 1; }
+        .admin-header-logo .logo-tana { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 22px; color: var(--primary); display: block; }
+        .admin-header-logo .logo-toys { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 11px; color: var(--purple); letter-spacing: 3px; display: block; }
+
+        .admin-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 100px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .header-right { display: flex; align-items: center; gap: 16px; }
+
+        .btn-store {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: var(--green-light);
+            color: var(--green);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-store:hover { background: #bce8d8; }
+
+        .btn-logout {
+            padding: 8px 18px;
+            background: var(--bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: #eee; color: var(--text); }
+
+        /* ===== MAIN CONTENT ===== */
+        .admin-main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .section-sub {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+        }
+
+        /* ===== STATS ROW ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 22px 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.orange { background: var(--primary-light); }
+        .stat-icon.green { background: var(--green-light); }
+        .stat-icon.purple { background: #f0ebf8; }
+
+        .stat-value { font-size: 28px; font-weight: 800; color: var(--text); }
+        .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+        /* ===== COLUMNS LAYOUT ===== */
+        .admin-cols {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* ===== PRODUCT LIST ===== */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .product-count {
+            background: var(--bg);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        .product-list { padding: 12px; }
+
+        .product-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            transition: background 0.15s;
+        }
+        .product-row:hover { background: var(--bg); }
+
+        .product-row-emoji {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+
+        .product-row-info { flex: 1; min-width: 0; }
+        .product-row-name { font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-row-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        .product-row-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .badge-pill {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .badge-hit { background: #fff3c4; color: #8a6a00; }
+        .badge-new { background: #d4f0e8; color: var(--green); }
+
+        .btn-edit {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: #ccc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+        .btn-edit:hover { background: #e8f4ff; color: #3b82f6; }
+
+        .btn-delete {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: #ccc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+        .btn-delete:hover { background: var(--danger-light); color: var(--danger); }
+
+        .drag-handle {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            cursor: grab;
+            font-size: 16px;
+            flex-shrink: 0;
+            border-radius: 6px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .drag-handle:hover { color: #999; background: var(--bg); }
+        .drag-handle:active { cursor: grabbing; }
+
+        .product-row.dragging { opacity: 0.4; }
+        .product-row.drag-over { background: #fff3ee; outline: 2px dashed var(--primary); outline-offset: -2px; border-radius: 10px; }
+
+        .empty-list {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted);
+        }
+        .empty-list-icon { font-size: 40px; margin-bottom: 12px; }
+        .empty-list p { font-size: 14px; font-weight: 600; }
+
+        /* ===== ADD FORM ===== */
+        .form-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); }
+
+        .form-card .card-header { cursor: pointer; user-select: none; }
+        .form-card .card-header:hover .card-header-title { color: var(--primary); }
+        .collapse-icon { color: var(--text-muted); font-size: 18px; transition: transform 0.2s; }
+        .form-card.open .collapse-icon { transform: rotate(180deg); }
+
+        .form-body { padding: 24px; display: none; }
+        .form-card.open .form-body { display: block; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        .form-row.single { grid-template-columns: 1fr; }
+        .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 12px; font-weight: 700; color: var(--text); letter-spacing: 0.03em; text-transform: uppercase; }
+        .form-label span { font-weight: 500; color: var(--text-muted); text-transform: none; letter-spacing: 0; }
+
+        .form-input, .form-select {
+            padding: 10px 13px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+            background: white;
+            width: 100%;
+        }
+        .form-input:focus, .form-select:focus { border-color: var(--primary); }
+        .form-input.required-field { border-color: #f8c0a0; }
+        .form-input.required-field:focus { border-color: var(--primary); }
+
+        .color-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .color-preview {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+        }
+        .color-input {
+            flex: 1;
+            padding: 8px 13px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .color-input:focus { border-color: var(--primary); }
+        .color-swatches {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .swatch {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+        .swatch:hover { transform: scale(1.2); }
+        .swatch.active { border-color: var(--text); }
+
+        .names-section {
+            background: #faf9f7;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 14px;
+        }
+        .names-section-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .names-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .lang-input-wrap { display: flex; flex-direction: column; gap: 5px; }
+        .lang-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+        }
+        .lang-tag-badge {
+            background: var(--bg);
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-size: 10px;
+        }
+
+        .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-submit:hover { opacity: 0.9; }
+        .btn-submit:active { transform: scale(0.98); }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #1a1a2e;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            z-index: 9999;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            pointer-events: none;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: var(--green); }
+        .toast.error { background: var(--danger); }
+
+        /* ===== CONFIRM MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 36px 32px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 16px 64px rgba(0,0,0,0.15);
+            transform: scale(0.9);
+            transition: transform 0.2s;
+        }
+        .modal-overlay.open .modal { transform: scale(1); }
+
+        .modal-icon { font-size: 40px; margin-bottom: 16px; }
+        .modal h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+        .modal p { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.5; }
+        .modal-btns { display: flex; gap: 12px; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: opacity 0.2s; }
+        .modal-btn.cancel { background: var(--bg); color: var(--text); }
+        .modal-btn.confirm { background: var(--danger); color: white; }
+        .modal-btn:hover { opacity: 0.85; }
+
+        /* ===== STARS INPUT ===== */
+        .stars-input { display: flex; gap: 4px; }
+        .star-btn {
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .star-btn.active { background: #fff3c4; border-color: #f0c000; }
+        .star-btn:hover { border-color: #f0c000; }
+
+        /* ===== PHOTO THUMBS ===== */
+        .photo-thumb {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            border-radius: 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid var(--border);
+        }
+        .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-thumb-remove {
+            position: absolute;
+            top: 2px; right: 2px;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            line-height: 1;
+        }
+        .photo-thumb-remove:hover { background: var(--danger); }
+
+        /* ===== PHOTO / VIDEO UPLOAD ===== */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            background: #fafafa;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .upload-area:hover { border-color: var(--primary); background: var(--primary-light); }
+        .upload-placeholder { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        .upload-placeholder span { font-size: 22px; display: block; margin-bottom: 6px; }
+        .upload-preview-img {
+            max-width: 100%;
+            max-height: 140px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .btn-clear {
+            margin-top: 8px;
+            padding: 5px 12px;
+            background: var(--danger-light);
+            color: var(--danger);
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-clear:hover { background: #ffd5d5; }
+
+        .video-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+        .vtab {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            background: white;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+        .vtab.active { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+        @media (max-width: 900px) {
+            .admin-cols { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: 1fr; }
+            .admin-main { padding: 24px 16px; }
+            .admin-header { padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="loginScreen">
+    <div class="login-card">
+        <div class="login-logo">
+            <svg width="54" height="54" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+            </svg>
+            <div class="login-logo-text">
+                <span class="login-logo-tana">Tana</span>
+                <span class="login-logo-toys">toys</span>
+            </div>
+        </div>
+        <h2>Вхід в адмін панель</h2>
+        <p>Введіть пароль для управління товарами</p>
+        <input type="password" id="passwordInput" class="login-input" placeholder="Пароль" autocomplete="current-password">
+        <button class="login-btn" onclick="login()">Увійти</button>
+        <div class="login-error" id="loginError">Невірний пароль. Спробуйте ще раз.</div>
+    </div>
+</div>
+
+<!-- ===== ADMIN SCREEN ===== -->
+<div id="adminScreen">
+
+    <header class="admin-header">
+        <div style="display:flex;align-items:center;gap:14px">
+            <a href="index.html" class="admin-header-logo">
+                <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="4" fill="white"/>
+                    <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="4" fill="white"/>
+                    <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="4" fill="white"/>
+                    <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                    <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                    <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div class="admin-header-logo-text">
+                    <span class="logo-tana">Tana</span>
+                    <span class="logo-toys">toys</span>
+                </div>
+            </a>
+            <span class="admin-badge">Адмін</span>
+        </div>
+        <div class="header-right">
+            <button class="btn-store" onclick="openStore()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Відкрити магазин
+            </button>
+            <button class="btn-logout" onclick="logout()">Вийти</button>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <h1 class="section-title">Управління товарами</h1>
+        <p class="section-sub">Додавайте, редагуйте та видаляйте товари в каталозі</p>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon orange">📦</div>
+                <div>
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">товарів у каталозі</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">🔥</div>
+                <div>
+                    <div class="stat-value" id="statHits">0</div>
+                    <div class="stat-label">хітів продажів</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">✨</div>
+                <div>
+                    <div class="stat-value" id="statNew">0</div>
+                    <div class="stat-label">новинок</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main columns -->
+        <div class="admin-cols">
+
+            <!-- Left: product list -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-header-title">Список товарів</span>
+                    <span class="product-count" id="productCountBadge">0 товарів</span>
+                </div>
+                <div class="product-list" id="productList">
+                    <div class="empty-list">
+                        <div class="empty-list-icon">📦</div>
+                        <p>Завантаження...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: add form -->
+            <div class="form-card card open" id="addFormCard">
+                <div class="card-header" onclick="toggleForm()">
+                    <span class="card-header-title" id="formTitle">Додати новий товар</span>
+                    <span class="collapse-icon">▾</span>
+                </div>
+                <div class="form-body">
+
+                    <!-- Multi Photo upload -->
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label class="form-label">Фото товару <span>(можна кілька)</span></label>
+                            <div id="photoThumbsRow" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px"></div>
+                            <div class="upload-area" onclick="document.getElementById('fPhoto').click()" style="min-height:60px">
+                                <div class="upload-placeholder"><span>📷</span>Додати фото</div>
+                            </div>
+                            <input type="file" id="fPhoto" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="fEmoji" value="🧩">
+                    <input type="hidden" id="fBg" value="#FFE5D0">
+                    <div id="colorPreview" style="display:none"></div>
+                    <div id="colorSwatches" style="display:none"></div>
+
+                    <!-- Video -->
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label class="form-label">Відео товару <span>(необов'язково)</span></label>
+                            <input type="hidden" id="fVideoUrl" value="">
+                            <div class="upload-area" id="videoArea" onclick="document.getElementById('fVideo').click()">
+                                <div id="videoPreview">
+                                    <div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>
+                                </div>
+                            </div>
+                            <input type="file" id="fVideo" accept="video/*" style="display:none" onchange="handleVideo(this)">
+                            <button type="button" class="btn-clear" id="clearVideoBtn" style="display:none" onclick="clearVideo()">✕ Видалити відео</button>
+                        </div>
+                    </div>
+
+                    <!-- Price + Old Price -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Ціна <span>(€)</span></label>
+                            <input type="number" id="fPrice" class="form-input required-field" placeholder="12.90" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Стара ціна <span>(€, необов'язково)</span></label>
+                            <input type="number" id="fOldPrice" class="form-input" placeholder="16.90" step="0.01" min="0">
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="fAge" value="1-3">
+                    <!-- Badge only -->
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label class="form-label">Мітка</label>
+                            <select id="fBadge" class="form-select">
+                                <option value="">— без мітки —</option>
+                                <option value="hit">🔥 Хіт</option>
+                                <option value="new">✨ Новинка</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Stars + Reviews -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Зірки</label>
+                            <div class="stars-input" id="starsInput">
+                                <button class="star-btn active" data-star="1" onclick="setStar(1)">★</button>
+                                <button class="star-btn active" data-star="2" onclick="setStar(2)">★</button>
+                                <button class="star-btn active" data-star="3" onclick="setStar(3)">★</button>
+                                <button class="star-btn active" data-star="4" onclick="setStar(4)">★</button>
+                                <button class="star-btn active" data-star="5" onclick="setStar(5)">★</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Кількість відгуків</label>
+                            <input type="number" id="fReviews" class="form-input" placeholder="25" min="0" value="0">
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Names in all languages -->
+                    <div class="names-section">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                            <div class="names-section-title" style="margin-bottom:0">Назва товару</div>
+                            <div id="translateStatus" style="font-size:11px;color:var(--text-muted)"></div>
+                        </div>
+                        <!-- Ukrainian first — source for translation -->
+                        <div class="lang-input-wrap" style="margin-bottom:12px">
+                            <label class="lang-tag"><span class="lang-tag-badge" style="background:var(--primary);color:white">UA</span> Українська <span style="font-weight:400;color:var(--text-muted)">(вводьте тут — решта перекладеться автоматично)</span></label>
+                            <input type="text" id="fNameUk" class="form-input" placeholder="Сортер «Тваринки»" oninput="scheduleTranslate()" style="border-color:var(--primary)">
+                        </div>
+                        <input type="hidden" id="fNameEt">
+                        <input type="hidden" id="fNameEn">
+                        <input type="hidden" id="fNameLt">
+                        <input type="hidden" id="fNameLv">
+                        <input type="hidden" id="fNameRu">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="names-section" style="margin-top:14px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                            <div class="names-section-title" style="margin-bottom:0">Опис товару</div>
+                            <div id="descTranslateStatus" style="font-size:11px;color:var(--text-muted)"></div>
+                        </div>
+                        <div class="lang-input-wrap" style="margin-bottom:12px">
+                            <label class="lang-tag"><span class="lang-tag-badge" style="background:var(--primary);color:white">UA</span> Опис українською <span style="font-weight:400;color:var(--text-muted)">(решта перекладеться автоматично)</span></label>
+                            <textarea id="fDescUk" class="form-input" rows="3" placeholder="Розвивальний набір для дітей від 1 до 3 років..." oninput="scheduleDescTranslate()" style="border-color:var(--primary);resize:vertical"></textarea>
+                        </div>
+                        <textarea id="fDescEt" style="display:none"></textarea>
+                        <textarea id="fDescEn" style="display:none"></textarea>
+                        <textarea id="fDescLt" style="display:none"></textarea>
+                        <textarea id="fDescLv" style="display:none"></textarea>
+                        <textarea id="fDescRu" style="display:none"></textarea>
+                    </div>
+
+                    <div style="display:flex;gap:10px">
+                        <button class="btn-submit" id="formSubmitBtn" onclick="addProduct()" style="flex:1">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            <span id="formSubmitLabel">Додати товар</span>
+                        </button>
+                        <button type="button" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;padding:13px 18px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:12px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Скасувати</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-icon">🗑️</div>
+        <h3>Видалити товар?</h3>
+        <p id="modalProductName">Ця дія незворотна. Товар буде видалено з каталогу.</p>
+        <div class="modal-btns">
+            <button class="modal-btn cancel" onclick="closeModal()">Скасувати</button>
+            <button class="modal-btn confirm" onclick="confirmDelete()">Видалити</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    const ADMIN_PASSWORD = 'toys2026';
+    const STORAGE_KEY = 'tana_products';
+
+    // ===== DEFAULT PRODUCTS (same as in app.js) =====
+    const defaultProducts = [
+        { id:1, emoji:'🧩', bg:'#FFE5D0', badge:'hit', price:11.90, oldPrice:14.90, age:'1-3', stars:5, reviews:42, names:{et:'Sorteerija «Loomad»',en:'Sorter «Animals»',lt:'Rikiuoklis «Gyvūnai»',lv:'Šķirotājs «Dzīvnieki»',ru:'Сортер «Животные»',uk:'Сортер «Тваринки»'} },
+        { id:2, emoji:'🪵', bg:'#D4F0E8', badge:'new', price:16.90, age:'3-6', stars:5, reviews:18, names:{et:'Puidust konstruktor',en:'Wooden Constructor',lt:'Medinis konstruktorius',lv:'Koka konstruktors',ru:'Деревянный конструктор',uk:"Дерев'яний конструктор"} },
+        { id:3, emoji:'🎨', bg:'#FFF3C4', badge:null, price:8.90, age:'3-6', stars:5, reviews:67, names:{et:'Noore kunstniku komplekt',en:'Young Artist Set',lt:'Jauno dailininko rinkinys',lv:'Jaunā mākslinieka komplekts',ru:'Набор юного художника',uk:'Набір юного художника'} },
+        { id:4, emoji:'🔵', bg:'#E8D5F5', badge:null, price:7.90, age:'1-3', stars:4, reviews:31, names:{et:'Taktiilne mosaiik',en:'Tactile Mosaic',lt:'Lytėjimo mozaika',lv:'Taktilā mozaīka',ru:'Тактильная мозаика',uk:'Тактильна мозаїка'} },
+        { id:5, emoji:'🧸', bg:'#FFD6E0', badge:'hit', price:12.90, age:'6-8', stars:5, reviews:24, names:{et:'Sõrmenukuteatri komplekt',en:'Finger Puppet Theater',lt:'Pirštinių teatro rinkinys',lv:'Pirkstu leļļu teātris',ru:'Пальчиковый театр',uk:'Пальчиковий театр'} },
+        { id:6, emoji:'🔬', bg:'#D0E8FF', badge:'new', price:18.90, age:'6-8', stars:5, reviews:13, names:{et:'Väikese teadlase komplekt',en:'Little Scientist Set',lt:'Mažojo mokslininko rinkinys',lv:'Mazā zinātnieka komplekts',ru:'Набор маленького учёного',uk:'Набір маленького вченого'} }
+    ];
+
+    const COLOR_SWATCHES = ['#FFE5D0','#D4F0E8','#FFF3C4','#E8D5F5','#FFD6E0','#D0E8FF','#FFEACC','#E0F4E0','#F5E0FF','#FFE0E0','#E0E8FF','#F0FFE0'];
+
+    let selectedStars = 5;
+    let pendingDeleteId = null;
+    let photoDataArray = [];
+    let photosChanged = false;
+    let editingId = null;
+    let videoData = null;
+    let videoMode = 'url';
+
+    // ===== AUTH =====
+    function login() {
+        const val = document.getElementById('passwordInput').value;
+        if (val === ADMIN_PASSWORD) {
+            sessionStorage.setItem('tana_admin', '1');
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminScreen').style.display = 'block';
+            initAdmin();
+        } else {
+            const input = document.getElementById('passwordInput');
+            const err = document.getElementById('loginError');
+            input.classList.add('error');
+            err.style.display = 'block';
+            setTimeout(() => { input.classList.remove('error'); err.style.display = 'none'; }, 3000);
+        }
+    }
+
+    function logout() {
+        sessionStorage.removeItem('tana_admin');
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('adminScreen').style.display = 'none';
+        document.getElementById('passwordInput').value = '';
+    }
+
+    document.getElementById('passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+    if (sessionStorage.getItem('tana_admin') === '1') {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminScreen').style.display = 'block';
+        initAdmin();
+    }
+
+    // ===== INDEXEDDB FOR IMAGES =====
+    let db = null;
+
+    function openDB() {
+        return new Promise((resolve, reject) => {
+            if (db) return resolve(db);
+            if (!window.indexedDB) { reject('no indexedDB'); return; }
+            const req = indexedDB.open('tana_toys_db', 1);
+            req.onupgradeneeded = e => e.target.result.createObjectStore('images', { keyPath: 'id' });
+            req.onsuccess = e => { db = e.target.result; resolve(db); };
+            req.onerror = e => { console.error('IndexedDB error', e); reject(e); };
+            req.onblocked = e => { console.error('IndexedDB blocked', e); reject(e); };
+        });
+    }
+
+    async function saveImage(productId, base64, index = 0) {
+        const d = await openDB();
+        return new Promise((resolve, reject) => {
+            const tx = d.transaction('images', 'readwrite');
+            tx.objectStore('images').put({ id: `img_${productId}_${index}`, data: base64 });
+            tx.oncomplete = resolve;
+            tx.onerror = reject;
+        });
+    }
+
+    async function loadImage(productId, index = 0) {
+        const d = await openDB();
+        return new Promise(resolve => {
+            const req = d.transaction('images').objectStore('images').get(`img_${productId}_${index}`);
+            req.onsuccess = () => {
+                if (req.result?.data) return resolve(req.result.data);
+                if (index === 0) {
+                    // legacy key fallback
+                    const r2 = d.transaction('images').objectStore('images').get(productId);
+                    r2.onsuccess = () => resolve(r2.result?.data || null);
+                    r2.onerror = () => resolve(null);
+                } else resolve(null);
+            };
+            req.onerror = () => resolve(null);
+        });
+    }
+
+    async function loadAllImages(productId, count) {
+        const imgs = [];
+        for (let i = 0; i < count; i++) {
+            const img = await loadImage(productId, i);
+            if (img) imgs.push(img);
+        }
+        return imgs;
+    }
+
+    async function deleteAllImages(productId, count) {
+        const d = await openDB();
+        return new Promise(resolve => {
+            const tx = d.transaction('images', 'readwrite');
+            const store = tx.objectStore('images');
+            for (let i = 0; i < Math.max(count, 1); i++) store.delete(`img_${productId}_${i}`);
+            store.delete(productId); // legacy
+            tx.oncomplete = resolve; tx.onerror = resolve;
+        });
+    }
+
+    async function saveVideoFile(productId, base64) {
+        const d = await openDB();
+        return new Promise((resolve, reject) => {
+            const tx = d.transaction('images', 'readwrite');
+            tx.objectStore('images').put({ id: 'video_' + productId, data: base64 });
+            tx.oncomplete = resolve;
+            tx.onerror = reject;
+        });
+    }
+
+    async function loadVideoFile(productId) {
+        const d = await openDB();
+        return new Promise(resolve => {
+            const req = d.transaction('images').objectStore('images').get('video_' + productId);
+            req.onsuccess = () => resolve(req.result?.data || null);
+            req.onerror = () => resolve(null);
+        });
+    }
+
+    async function deleteImage(productId) {
+        const prods = loadProducts();
+        const p = prods.find(x => x.id === productId);
+        await deleteAllImages(productId, (p?.imageCount || 1) + 5);
+    }
+
+    // ===== LOAD / SAVE =====
+    function loadProducts() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            return saved ? JSON.parse(saved) : defaultProducts;
+        } catch { return defaultProducts; }
+    }
+
+    function saveProducts(prods) {
+        try {
+            const clean = prods.map(p => { const c = {...p}; delete c.image; return c; });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
+            return true;
+        } catch (e) {
+            showToast('Помилка збереження. Спробуйте ще раз.', 'error');
+            return false;
+        }
+    }
+
+    // ===== INIT =====
+    function initAdmin() {
+        buildSwatches();
+        renderList();
+    }
+
+    function buildSwatches() {
+        const container = document.getElementById('colorSwatches');
+        container.innerHTML = COLOR_SWATCHES.map(c =>
+            `<div class="swatch${c === '#FFE5D0' ? ' active' : ''}" style="background:${c}" title="${c}" onclick="selectSwatch('${c}', this)"></div>`
+        ).join('');
+    }
+
+    // ===== RENDER PRODUCT LIST =====
+    async function renderList() {
+        const products = loadProducts();
+        const list = document.getElementById('productList');
+
+        // Stats
+        document.getElementById('statTotal').textContent = products.length;
+        document.getElementById('statHits').textContent = products.filter(p => p.badge === 'hit').length;
+        document.getElementById('statNew').textContent = products.filter(p => p.badge === 'new').length;
+        document.getElementById('productCountBadge').textContent = products.length + ' товарів';
+
+        if (!products.length) {
+            list.innerHTML = `<div class="empty-list"><div class="empty-list-icon">📦</div><p>Товарів ще немає.<br>Додайте перший!</p></div>`;
+            return;
+        }
+
+        const ageLabelMap = { '1-3': '1–3 роки', '3-6': '3–6 років', '6-8': '6–8 років' };
+        const badgeMap = { hit: '<span class="badge-pill badge-hit">Хіт</span>', new: '<span class="badge-pill badge-new">Новинка</span>' };
+
+        // Render rows, then load images async
+        list.innerHTML = products.map(p => {
+            const name = p.names.uk || p.names.en || p.names.et || '—';
+            const age = ageLabelMap[p.age] || p.age;
+            const badge = p.badge ? badgeMap[p.badge] || '' : '';
+            const oldPriceHtml = p.oldPrice ? `<s style="color:#bbb;font-size:12px;font-weight:400">€${Number(p.oldPrice).toFixed(2)}</s> ` : '';
+            const videoIcon = p.video ? `<span title="є відео" style="font-size:12px;margin-left:4px">🎬</span>` : '';
+            return `
+            <div class="product-row" id="row-${p.id}" draggable="true" data-id="${p.id}">
+                <div class="drag-handle" title="Перетягнути">⠿</div>
+                <div id="thumb-${p.id}" style="flex-shrink:0"><div class="product-row-emoji" style="background:${p.bg}">${p.emoji}</div></div>
+                <div class="product-row-info">
+                    <div class="product-row-name">${name} ${badge}${videoIcon}</div>
+                    <div class="product-row-meta">${age} · ${'★'.repeat(p.stars)}${'☆'.repeat(5-p.stars)} (${p.reviews})</div>
+                </div>
+                <div class="product-row-price">${oldPriceHtml}€${Number(p.price).toFixed(2)}</div>
+                <button class="btn-edit" onclick="startEdit(${p.id})" title="Редагувати">✏️</button>
+                <button class="btn-delete" onclick="askDelete(${p.id},'${name.replace(/'/g,"\\'")}')">🗑</button>
+            </div>`;
+        }).join('');
+
+        initDragSort();
+
+        // Load images from IndexedDB
+        products.forEach(async p => {
+            const img = await loadImage(p.id);
+            if (img) {
+                const el = document.getElementById(`thumb-${p.id}`);
+                if (el) el.innerHTML = `<img src="${img}" style="width:48px;height:48px;border-radius:10px;object-fit:cover">`;
+            }
+        });
+    }
+
+    // ===== AUTO TRANSLATE =====
+    let translateTimer = null;
+
+    function scheduleTranslate() {
+        clearTimeout(translateTimer);
+        const text = document.getElementById('fNameUk').value.trim();
+        if (!text) {
+            ['fNameEt','fNameEn','fNameLt','fNameLv','fNameRu'].forEach(id => document.getElementById(id).value = '');
+            setTranslateStatus('');
+            return;
+        }
+        setTranslateStatus('⏳ Перекладаю...');
+        translateTimer = setTimeout(() => translateAll(text), 800);
+    }
+
+    async function translateAll(text) {
+        const targets = [
+            { id: 'fNameEt', lang: 'et' },
+            { id: 'fNameEn', lang: 'en' },
+            { id: 'fNameLt', lang: 'lt' },
+            { id: 'fNameLv', lang: 'lv' },
+            { id: 'fNameRu', lang: 'ru' }
+        ];
+        try {
+            await Promise.all(targets.map(async ({ id, lang }) => {
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=uk|${lang}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                const translated = data?.responseData?.translatedText;
+                if (translated && data.responseStatus === 200) {
+                    document.getElementById(id).value = translated;
+                }
+            }));
+            setTranslateStatus('✓ Перекладено');
+            setTimeout(() => setTranslateStatus(''), 2000);
+        } catch {
+            setTranslateStatus('⚠ Помилка перекладу');
+        }
+    }
+
+    function setTranslateStatus(msg) {
+        document.getElementById('translateStatus').textContent = msg;
+    }
+
+    // ===== AUTO TRANSLATE DESCRIPTION =====
+    let descTranslateTimer = null;
+
+    function scheduleDescTranslate() {
+        clearTimeout(descTranslateTimer);
+        const text = document.getElementById('fDescUk').value.trim();
+        if (!text) {
+            ['fDescEt','fDescEn','fDescLt','fDescLv','fDescRu'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+            document.getElementById('descTranslateStatus').textContent = '';
+            return;
+        }
+        document.getElementById('descTranslateStatus').textContent = '⏳ Перекладаю...';
+        descTranslateTimer = setTimeout(() => translateDesc(text), 800);
+    }
+
+    async function translateDesc(text) {
+        const targets = [
+            { id: 'fDescEt', lang: 'et' },
+            { id: 'fDescEn', lang: 'en' },
+            { id: 'fDescLt', lang: 'lt' },
+            { id: 'fDescLv', lang: 'lv' },
+            { id: 'fDescRu', lang: 'ru' }
+        ];
+        const safe = text.length > 480 ? text.substring(0, 480) : text;
+        try {
+            await Promise.all(targets.map(async ({ id, lang }) => {
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(safe)}&langpair=uk|${lang}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                const translated = data?.responseData?.translatedText;
+                if (translated && data.responseStatus === 200) {
+                    const el = document.getElementById(id);
+                    if (el) el.value = translated;
+                }
+            }));
+            document.getElementById('descTranslateStatus').textContent = '✓ Перекладено';
+            setTimeout(() => { document.getElementById('descTranslateStatus').textContent = ''; }, 2000);
+        } catch {
+            document.getElementById('descTranslateStatus').textContent = '⚠ Помилка перекладу';
+        }
+    }
+
+    // ===== PHOTO =====
+    function handlePhoto(input) {
+        const file = input.files[0];
+        if (!file) return;
+        input.value = '';
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX = 900;
+                let w = img.width, h = img.height;
+                if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+                else { w = Math.round(w * MAX / h); h = MAX; }
+                canvas.width = w; canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                const data = canvas.toDataURL('image/jpeg', 0.8);
+                photoDataArray.push(data);
+                photosChanged = true;
+                renderPhotoThumbs();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function renderPhotoThumbs() {
+        const row = document.getElementById('photoThumbsRow');
+        row.innerHTML = photoDataArray.map((src, i) => `
+            <div class="photo-thumb">
+                <img src="${src}">
+                <button class="photo-thumb-remove" onclick="removePhoto(${i})">✕</button>
+            </div>`).join('');
+    }
+
+    function removePhoto(index) {
+        photoDataArray.splice(index, 1);
+        photosChanged = true;
+        renderPhotoThumbs();
+    }
+
+    function clearPhoto() {
+        photoDataArray = [];
+        photosChanged = false;
+        document.getElementById('photoThumbsRow').innerHTML = '';
+    }
+
+    // ===== VIDEO =====
+    function switchVideoTab(mode, btn) {
+        videoMode = mode;
+        document.querySelectorAll('.vtab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('videoUrlSection').style.display = mode === 'url' ? 'block' : 'none';
+        document.getElementById('videoFileSection').style.display = mode === 'file' ? 'block' : 'none';
+    }
+
+    function handleVideo(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            videoData = e.target.result;
+            document.getElementById('videoPreview').innerHTML = `<video src="${videoData}" style="max-width:100%;max-height:120px;border-radius:8px" controls></video>`;
+            document.getElementById('clearVideoBtn').style.display = 'inline-block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearVideo() {
+        videoData = null;
+        document.getElementById('fVideo').value = '';
+        document.getElementById('videoPreview').innerHTML = '<div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>';
+        document.getElementById('clearVideoBtn').style.display = 'none';
+    }
+
+    // ===== STARS =====
+    function setStar(n) {
+        selectedStars = n;
+        document.querySelectorAll('.star-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', i < n);
+        });
+    }
+
+    // ===== COLOR =====
+    function updateColorPreview() {
+        const val = document.getElementById('fBg').value;
+        document.getElementById('colorPreview').style.background = val;
+        document.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', s.style.background === val || s.title === val));
+    }
+
+    function selectSwatch(color, el) {
+        document.getElementById('fBg').value = color;
+        document.getElementById('colorPreview').style.background = color;
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    // ===== ADD PRODUCT =====
+    async function addProduct() {
+        const emoji = document.getElementById('fEmoji').value.trim() || '🧩';
+        const bg    = document.getElementById('fBg').value.trim() || '#FFE5D0';
+        const priceRaw = parseFloat(document.getElementById('fPrice').value);
+        const oldPriceRaw = parseFloat(document.getElementById('fOldPrice').value);
+        const age   = document.getElementById('fAge').value;
+        const badge = document.getElementById('fBadge').value || null;
+        const reviews = parseInt(document.getElementById('fReviews').value) || 0;
+
+        const nameEt = document.getElementById('fNameEt').value.trim();
+        const nameEn = document.getElementById('fNameEn').value.trim();
+        const nameLt = document.getElementById('fNameLt').value.trim();
+        const nameLv = document.getElementById('fNameLv').value.trim();
+        const nameRu = document.getElementById('fNameRu').value.trim();
+        const nameUk = document.getElementById('fNameUk').value.trim();
+
+        const descUk = document.getElementById('fDescUk').value.trim();
+        const descEt = document.getElementById('fDescEt').value.trim();
+        const descEn = document.getElementById('fDescEn').value.trim();
+        const descLt = document.getElementById('fDescLt').value.trim();
+        const descLv = document.getElementById('fDescLv').value.trim();
+        const descRu = document.getElementById('fDescRu').value.trim();
+
+        // Validate required fields
+        if (isNaN(priceRaw) || priceRaw <= 0) { showToast('Вкажіть ціну товару', 'error'); document.getElementById('fPrice').focus(); return; }
+        if (!nameUk) { showToast('Вкажіть назву товару українською', 'error'); document.getElementById('fNameUk').focus(); return; }
+
+        const products = loadProducts();
+        const maxId = products.reduce((m, p) => Math.max(m, p.id), 0);
+
+        const isVideoFile = !!videoData;
+        const finalVideo = isVideoFile ? 'idb' : null;
+
+        const newProduct = {
+            id: maxId + 1,
+            emoji,
+            bg,
+            badge,
+            price: Math.round(priceRaw * 100) / 100,
+            oldPrice: (!isNaN(oldPriceRaw) && oldPriceRaw > 0) ? Math.round(oldPriceRaw * 100) / 100 : null,
+            age,
+            stars: selectedStars,
+            reviews,
+            imageCount: photosChanged ? photoDataArray.length : (editingId ? (loadProducts().find(x=>x.id===editingId)?.imageCount || 0) : photoDataArray.length),
+            video: finalVideo,
+            names: {
+                et: nameEt || nameUk,
+                en: nameEn || nameUk,
+                lt: nameLt || nameUk,
+                lv: nameLv || nameUk,
+                ru: nameRu || nameUk,
+                uk: nameUk
+            },
+            descs: {
+                et: descEt || '',
+                en: descEn || '',
+                lt: descLt || '',
+                lv: descLv || '',
+                ru: descRu || '',
+                uk: descUk
+            }
+        };
+
+        const targetId = editingId || (maxId + 1);
+        newProduct.id = targetId;
+
+        let updatedProducts;
+        if (editingId) {
+            updatedProducts = products.map(p => p.id === editingId ? newProduct : p);
+        } else {
+            updatedProducts = [...products, newProduct];
+        }
+
+        if (!saveProducts(updatedProducts)) return;
+
+        if (photosChanged) {
+            try {
+                await deleteAllImages(targetId, 20);
+                for (let i = 0; i < photoDataArray.length; i++) {
+                    await saveImage(targetId, photoDataArray[i], i);
+                }
+                photosChanged = false;
+            } catch(e) { showToast('Збережено, але фото не збереглось', 'error'); }
+        }
+        if (isVideoFile) {
+            try { await saveVideoFile(targetId, videoData); }
+            catch(e) { showToast('Збережено, але відео не збереглось', 'error'); }
+        }
+
+        const wasEditing = !!editingId;
+        editingId = null;
+        document.getElementById('formTitle').textContent = 'Додати новий товар';
+        document.getElementById('formSubmitLabel').textContent = 'Додати товар';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+
+        await renderList();
+        resetForm();
+
+        showToast(wasEditing ? '✓ Товар оновлено! Оновіть сторінку магазину (F5)' : '✓ Товар додано! Оновіть сторінку магазину (F5)', 'success');
+
+        setTimeout(() => {
+            const row = document.getElementById('row-' + targetId);
+            if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }
+
+    // ===== DELETE =====
+    function askDelete(id, name) {
+        pendingDeleteId = id;
+        document.getElementById('modalProductName').textContent = `«${name}» буде видалено з каталогу. Цю дію неможливо відмінити.`;
+        document.getElementById('modalOverlay').classList.add('open');
+    }
+
+    function closeModal() {
+        pendingDeleteId = null;
+        document.getElementById('modalOverlay').classList.remove('open');
+    }
+
+    function confirmDelete() {
+        if (!pendingDeleteId) return;
+        let products = loadProducts();
+        products = products.filter(x => x.id !== pendingDeleteId);
+        saveProducts(products);
+        deleteImage(pendingDeleteId).catch(() => {});
+        loadVideoFile(pendingDeleteId).then(() => {
+            openDB().then(d => {
+                const tx = d.transaction('images', 'readwrite');
+                tx.objectStore('images').delete('video_' + pendingDeleteId);
+            });
+        }).catch(() => {});
+        renderList();
+        closeModal();
+        showToast(`Товар видалено`, 'error');
+    }
+
+    document.getElementById('modalOverlay').addEventListener('click', e => {
+        if (e.target === document.getElementById('modalOverlay')) closeModal();
+    });
+
+    // ===== EDIT PRODUCT =====
+    async function startEdit(id) {
+        const products = loadProducts();
+        const p = products.find(x => x.id === id);
+        if (!p) return;
+
+        editingId = id;
+        document.getElementById('formTitle').textContent = 'Редагувати товар';
+        document.getElementById('formSubmitLabel').textContent = 'Зберегти зміни';
+        document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+
+        // Fill form fields
+        document.getElementById('fEmoji').value = p.emoji || '🧩';
+        document.getElementById('fBg').value = p.bg || '#FFE5D0';
+        document.getElementById('colorPreview').style.background = p.bg || '#FFE5D0';
+        document.getElementById('fPrice').value = p.price || '';
+        document.getElementById('fOldPrice').value = p.oldPrice || '';
+        document.getElementById('fAge').value = p.age || '1-3';
+        document.getElementById('fBadge').value = p.badge || '';
+        document.getElementById('fReviews').value = p.reviews || 0;
+        document.getElementById('fNameUk').value = p.names?.uk || '';
+        document.getElementById('fNameEt').value = p.names?.et || '';
+        document.getElementById('fNameEn').value = p.names?.en || '';
+        document.getElementById('fNameLt').value = p.names?.lt || '';
+        document.getElementById('fNameLv').value = p.names?.lv || '';
+        document.getElementById('fNameRu').value = p.names?.ru || '';
+        document.getElementById('fDescUk').value = p.descs?.uk || '';
+        document.getElementById('fDescEt').value = p.descs?.et || '';
+        document.getElementById('fDescEn').value = p.descs?.en || '';
+        document.getElementById('fDescLt').value = p.descs?.lt || '';
+        document.getElementById('fDescLv').value = p.descs?.lv || '';
+        document.getElementById('fDescRu').value = p.descs?.ru || '';
+        setStar(p.stars || 5);
+
+        // Load existing photos
+        clearPhoto();
+        const count = p.imageCount || 1;
+        const imgs = await loadAllImages(id, count);
+        if (imgs.length) {
+            photoDataArray = imgs;
+            photosChanged = false; // not changed yet, just loaded
+            renderPhotoThumbs();
+        }
+
+        // Open form and scroll to it
+        document.getElementById('addFormCard').classList.add('open');
+        document.getElementById('addFormCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        document.getElementById('formTitle').textContent = 'Додати новий товар';
+        document.getElementById('formSubmitLabel').textContent = 'Додати товар';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        resetForm();
+    }
+
+    function resetForm() {
+        document.getElementById('fEmoji').value = '🧩';
+        document.getElementById('fBg').value = '#FFE5D0';
+        document.getElementById('colorPreview').style.background = '#FFE5D0';
+        document.getElementById('fPrice').value = '';
+        document.getElementById('fOldPrice').value = '';
+        document.getElementById('fAge').value = '1-3';
+        document.getElementById('fBadge').value = '';
+        document.getElementById('fReviews').value = '0';
+        document.getElementById('fNameUk').value = '';
+        document.getElementById('fNameEt').value = '';
+        document.getElementById('fNameEn').value = '';
+        document.getElementById('fNameLt').value = '';
+        document.getElementById('fNameLv').value = '';
+        document.getElementById('fNameRu').value = '';
+        document.getElementById('fDescUk').value = '';
+        document.getElementById('fDescEt').value = '';
+        document.getElementById('fDescEn').value = '';
+        document.getElementById('fDescLt').value = '';
+        document.getElementById('fDescLv').value = '';
+        document.getElementById('fDescRu').value = '';
+        clearPhoto();
+        clearVideo();
+        setStar(5);
+        buildSwatches();
+    }
+
+    // ===== EXPORT / IMPORT =====
+    async function exportData() {
+        const btn = event.target;
+        btn.textContent = '⏳ Зберігаю...';
+        btn.disabled = true;
+
+        const products = loadProducts();
+        const data = { version: 1, date: new Date().toISOString(), products: [] };
+
+        for (const p of products) {
+            const entry = { ...p };
+            const imgs = await loadAllImages(p.id, (p.imageCount || 1) + 5);
+            if (imgs.length) entry._images = imgs;
+            const video = await loadVideoFile(p.id);
+            if (video) entry._video = video;
+            data.products.push(entry);
+        }
+
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tanatoys-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+
+        btn.textContent = '↓ Експорт';
+        btn.disabled = false;
+        showToast('Резервну копію збережено', 'success');
+    }
+
+    async function importData(file) {
+        if (!file) return;
+        try {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            if (!data.products) throw new Error('Невірний формат файлу');
+
+            const products = data.products.map(p => {
+                const clean = { ...p };
+                delete clean._images;
+                delete clean._video;
+                return clean;
+            });
+
+            saveProducts(products);
+
+            for (const p of data.products) {
+                if (p._images?.length) {
+                    await deleteAllImages(p.id, 20);
+                    for (let i = 0; i < p._images.length; i++) {
+                        await saveImage(p.id, p._images[i], i);
+                    }
+                }
+                if (p._video) {
+                    await saveVideoFile(p.id, p._video);
+                }
+            }
+
+            await renderList();
+            showToast(`✓ Відновлено ${products.length} товарів! Оновіть магазин (F5)`, 'success');
+        } catch(e) {
+            showToast('Помилка імпорту: ' + e.message, 'error');
+        }
+    }
+
+    // ===== RETRANSLATE ALL DESCRIPTIONS =====
+    async function retranslateAllDescs() {
+        const btn = document.getElementById('retranslateBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ Перекладаю...';
+
+        const products = loadProducts();
+        const langs = ['et','en','lt','lv','ru'];
+        let done = 0;
+
+        for (const p of products) {
+            const ukText = p.descs?.uk;
+            if (!ukText) { done++; continue; }
+
+            const safe = ukText.length > 480 ? ukText.substring(0, 480) : ukText;
+            const newDescs = { uk: ukText };
+
+            await Promise.all(langs.map(async lang => {
+                try {
+                    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(safe)}&langpair=uk|${lang}`;
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    const translated = data?.responseData?.translatedText;
+                    newDescs[lang] = (translated && data.responseStatus === 200) ? translated : '';
+                } catch {
+                    newDescs[lang] = '';
+                }
+            }));
+
+            p.descs = newDescs;
+            done++;
+            btn.textContent = `⏳ ${done}/${products.length}...`;
+        }
+
+        saveProducts(products);
+        btn.disabled = false;
+        btn.textContent = '✓ Готово! Оновіть магазин (F5)';
+        btn.style.background = 'var(--green)';
+        showToast('Переклади оновлено! Оновіть сторінку магазину (F5)', 'success');
+    }
+
+    // ===== DRAG SORT =====
+    let dragSrcId = null;
+
+    function initDragSort() {
+        document.querySelectorAll('#productList .product-row').forEach(row => {
+            row.addEventListener('dragstart', e => {
+                dragSrcId = parseInt(row.dataset.id);
+                row.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            row.addEventListener('dragend', () => {
+                row.classList.remove('dragging');
+                document.querySelectorAll('#productList .product-row').forEach(r => r.classList.remove('drag-over'));
+            });
+            row.addEventListener('dragover', e => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                document.querySelectorAll('#productList .product-row').forEach(r => r.classList.remove('drag-over'));
+                row.classList.add('drag-over');
+            });
+            row.addEventListener('dragleave', () => {
+                row.classList.remove('drag-over');
+            });
+            row.addEventListener('drop', e => {
+                e.preventDefault();
+                row.classList.remove('drag-over');
+                const dropId = parseInt(row.dataset.id);
+                if (dragSrcId === dropId) return;
+                const products = loadProducts();
+                const fromIdx = products.findIndex(p => p.id === dragSrcId);
+                const toIdx = products.findIndex(p => p.id === dropId);
+                if (fromIdx === -1 || toIdx === -1) return;
+                const moved = products.splice(fromIdx, 1)[0];
+                products.splice(toIdx, 0, moved);
+                saveProducts(products);
+                renderList();
+            });
+        });
+    }
+
+    // ===== OPEN STORE =====
+    let storeWindow = null;
+    function openStore() {
+        if (storeWindow && !storeWindow.closed) {
+            storeWindow.location.reload();
+            storeWindow.focus();
+        } else {
+            storeWindow = window.open('index.html', 'tana_store');
+        }
+    }
+
+    // ===== TOGGLE FORM =====
+    function toggleForm() {
+        document.getElementById('addFormCard').classList.toggle('open');
+    }
+
+    // ===== TOAST =====
+    function showToast(msg, type = '') {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.className = 'toast' + (type ? ' ' + type : '');
+        void toast.offsetWidth;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+</script>
+
+</body>
+</html>
