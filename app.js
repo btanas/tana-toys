@@ -574,6 +574,11 @@ function addToCart(id) {
     setTimeout(() => btn.style.transform = '', 200);
 }
 
+function removeFromCart(id) {
+    cart = cart.filter(i => i.id !== id);
+    updateCartUI();
+}
+
 function changeQty(id, delta) {
     const item = cart.find(i => i.id === id);
     if (!item) return;
@@ -609,6 +614,7 @@ function updateCartUI() {
                 <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
                 <span class="qty-value">${item.qty}</span>
                 <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+                <button class="cart-remove-btn" onclick="removeFromCart(${item.id})" title="Видалити">✕</button>
             </div>
         </div>`).join('');
 
