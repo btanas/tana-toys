@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <title>Tana Toys — QR Variandid</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #f0ecff;
+            font-family: 'Inter', sans-serif;
+            padding: 40px 24px;
+        }
+        h1 {
+            text-align: center;
+            font-family: 'Nunito', sans-serif;
+            font-size: 22px;
+            color: #444;
+            margin-bottom: 40px;
+            letter-spacing: 0.02em;
+        }
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .variant-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .variant-num {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 15px;
+            color: #aaa;
+            letter-spacing: 0.1em;
+        }
+
+        /* ===== VARIANT 1 — Purple Gradient ===== */
+        .v1 {
+            background: linear-gradient(145deg, #6e3fa3 0%, #A07EC8 60%, #c49de0 100%);
+            border-radius: 28px;
+            padding: 36px 32px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 20px 60px rgba(110,63,163,0.35);
+            color: white;
+        }
+        .v1 .qr-box {
+            background: white;
+            border-radius: 16px;
+            padding: 10px;
+        }
+        .v1 .qr-box canvas { display: block; border-radius: 8px; }
+        .v1 .v-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 20px; color: white; text-align: center; }
+        .v1 .v-sub { font-size: 12px; color: rgba(255,255,255,0.75); text-align: center; letter-spacing: 0.05em; }
+        .v1 .v-url { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 100px; padding: 6px 16px; font-size: 11px; color: white; font-weight: 600; }
+        .v1 .logo-row { display: flex; align-items: center; gap: 8px; }
+        .v1 .logo-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 22px; color: white; }
+        .v1 .logo-toys { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: rgba(255,255,255,0.7); text-transform: uppercase; }
+
+        /* ===== VARIANT 2 — White Minimal ===== */
+        .v2 {
+            background: white;
+            border-radius: 28px;
+            padding: 36px 32px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+            border: 2px solid #f0ebff;
+        }
+        .v2 .qr-box {
+            background: #f4f0ff;
+            border-radius: 20px;
+            padding: 14px;
+        }
+        .v2 .qr-box canvas { display: block; border-radius: 8px; }
+        .v2 .v-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 19px; color: #1a1a2e; text-align: center; }
+        .v2 .v-sub { font-size: 12px; color: #aaa; text-align: center; }
+        .v2 .v-url { background: #f4f0ff; border-radius: 100px; padding: 6px 16px; font-size: 11px; color: #A07EC8; font-weight: 700; }
+        .v2 .logo-row { display: flex; align-items: center; gap: 8px; }
+        .v2 .logo-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 22px; color: #A07EC8; }
+        .v2 .logo-toys { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: #E8673A; text-transform: uppercase; }
+        .v2 .divider { width: 40px; height: 3px; background: linear-gradient(90deg, #A07EC8, #E8673A); border-radius: 2px; }
+
+        /* ===== VARIANT 3 — Dark Night ===== */
+        .v3 {
+            background: #12102a;
+            border-radius: 28px;
+            padding: 36px 32px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .v3::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 150px; height: 150px;
+            background: radial-gradient(circle, rgba(160,126,200,0.25) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .v3 .qr-box {
+            background: white;
+            border-radius: 16px;
+            padding: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .v3 .qr-box canvas { display: block; border-radius: 8px; }
+        .v3 .v-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 19px; color: white; text-align: center; z-index: 1; }
+        .v3 .v-sub { font-size: 12px; color: rgba(255,255,255,0.45); text-align: center; z-index: 1; }
+        .v3 .v-url { background: rgba(160,126,200,0.15); border: 1px solid rgba(160,126,200,0.3); border-radius: 100px; padding: 6px 16px; font-size: 11px; color: #c49de0; font-weight: 600; z-index: 1; }
+        .v3 .logo-row { display: flex; align-items: center; gap: 8px; z-index: 1; }
+        .v3 .logo-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 22px; color: #c49de0; }
+        .v3 .logo-toys { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: #E8673A; text-transform: uppercase; }
+        .v3 .stars { color: #c49de0; font-size: 14px; letter-spacing: 2px; z-index: 1; }
+
+        /* ===== VARIANT 4 — Orange Fun ===== */
+        .v4 {
+            background: #fff8f5;
+            border-radius: 28px;
+            padding: 36px 32px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 40px rgba(232,103,58,0.15);
+            border: 2px solid #ffe0d0;
+            position: relative;
+            overflow: hidden;
+        }
+        .v4::after {
+            content: '🧸';
+            position: absolute;
+            bottom: -10px; right: 10px;
+            font-size: 64px;
+            opacity: 0.07;
+        }
+        .v4 .qr-box {
+            background: white;
+            border: 3px solid #E8673A;
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow: 0 8px 24px rgba(232,103,58,0.2);
+        }
+        .v4 .qr-box canvas { display: block; border-radius: 8px; }
+        .v4 .v-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 19px; color: #1a1a2e; text-align: center; }
+        .v4 .v-sub { font-size: 12px; color: #aaa; text-align: center; }
+        .v4 .v-url { background: #fff0e8; border: 1.5px solid #E8673A; border-radius: 100px; padding: 6px 16px; font-size: 11px; color: #E8673A; font-weight: 700; }
+        .v4 .logo-row { display: flex; align-items: center; gap: 8px; }
+        .v4 .logo-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 22px; color: #E8673A; }
+        .v4 .logo-toys { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: #A07EC8; text-transform: uppercase; }
+        .v4 .badge { background: #E8673A; color: white; font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+        /* ===== VARIANT 5 — Pastel Soft ===== */
+        .v5 {
+            background: linear-gradient(160deg, #fef9ff 0%, #f0f7ff 100%);
+            border-radius: 28px;
+            padding: 36px 32px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 40px rgba(160,126,200,0.12);
+            border: 1.5px solid #e8e0f5;
+        }
+        .v5 .qr-box {
+            background: white;
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow: 0 6px 24px rgba(160,126,200,0.18);
+            position: relative;
+        }
+        .v5 .qr-box::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #A07EC8, #E8673A, #A07EC8);
+            z-index: -1;
+        }
+        .v5 .qr-box canvas { display: block; border-radius: 8px; }
+        .v5 .v-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 19px; color: #1a1a2e; text-align: center; }
+        .v5 .v-sub { font-size: 12px; color: #bbb; text-align: center; }
+        .v5 .v-url { background: white; border: 1.5px solid #d8c8f0; border-radius: 100px; padding: 6px 16px; font-size: 11px; color: #A07EC8; font-weight: 700; box-shadow: 0 2px 8px rgba(160,126,200,0.1); }
+        .v5 .logo-row { display: flex; align-items: center; gap: 8px; }
+        .v5 .logo-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 22px; background: linear-gradient(135deg, #A07EC8, #E8673A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .v5 .logo-toys { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: #ccc; text-transform: uppercase; }
+        .v5 .pill-row { display: flex; gap: 8px; }
+        .v5 .pill { background: white; border: 1px solid #e8e0f5; border-radius: 100px; padding: 4px 12px; font-size: 11px; color: #999; }
+    </style>
+</head>
+<body>
+
+<h1>Vali sobiv variant →</h1>
+
+<div class="grid">
+
+    <!-- VARIANT 1 -->
+    <div class="variant-wrap">
+        <div class="variant-num">№ 1</div>
+        <div class="v1">
+            <div class="logo-row">
+                <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
+                    <circle cx="26" cy="29" r="13" stroke="white" stroke-width="4" fill="rgba(255,255,255,0.15)"/>
+                    <circle cx="74" cy="29" r="13" stroke="white" stroke-width="4" fill="rgba(255,255,255,0.15)"/>
+                    <circle cx="50" cy="57" r="31" stroke="white" stroke-width="4" fill="rgba(255,255,255,0.15)"/>
+                    <circle cx="40" cy="51" r="3" fill="white"/>
+                    <circle cx="60" cy="51" r="3" fill="white"/>
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="white"/>
+                    <path d="M44 67 Q50 74 56 67" stroke="white" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div>
+                    <div class="logo-name">Tana toys</div>
+                    <div class="logo-toys">arendavad mänguasjad</div>
+                </div>
+            </div>
+            <div class="qr-box"><div id="qr1"></div></div>
+            <div class="v-title">Skanni ja telli</div>
+            <div class="v-sub">Kogu kataloog sinu telefonis</div>
+            <div class="v-url">btanas.github.io/tana-toys</div>
+        </div>
+    </div>
+
+    <!-- VARIANT 2 -->
+    <div class="variant-wrap">
+        <div class="variant-num">№ 2</div>
+        <div class="v2">
+            <div class="logo-row">
+                <svg width="38" height="38" viewBox="0 0 100 100" fill="none">
+                    <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                    <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                    <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div>
+                    <div class="logo-name">Tana toys</div>
+                    <div class="logo-toys">arendavad mänguasjad</div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="qr-box"><div id="qr2"></div></div>
+            <div class="v-title">Skanni ja vaata kataloogi</div>
+            <div class="v-sub">Kiire tellimine otse telefonis</div>
+            <div class="v-url">btanas.github.io/tana-toys</div>
+        </div>
+    </div>
+
+    <!-- VARIANT 3 -->
+    <div class="variant-wrap">
+        <div class="variant-num">№ 3</div>
+        <div class="v3">
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <div class="logo-row">
+                <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
+                    <circle cx="26" cy="29" r="13" stroke="#c49de0" stroke-width="3.8" fill="rgba(160,126,200,0.15)"/>
+                    <circle cx="74" cy="29" r="13" stroke="#c49de0" stroke-width="3.8" fill="rgba(160,126,200,0.15)"/>
+                    <circle cx="50" cy="57" r="31" stroke="#c49de0" stroke-width="3.8" fill="rgba(160,126,200,0.15)"/>
+                    <circle cx="40" cy="51" r="3" fill="#c49de0"/>
+                    <circle cx="60" cy="51" r="3" fill="#c49de0"/>
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#c49de0"/>
+                    <path d="M44 67 Q50 74 56 67" stroke="#c49de0" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div>
+                    <div class="logo-name">Tana toys</div>
+                    <div class="logo-toys">arendavad mänguasjad</div>
+                </div>
+            </div>
+            <div class="qr-box"><div id="qr3"></div></div>
+            <div class="v-title">Skanni ja avasta</div>
+            <div class="v-sub">Harivad mänguasjad lastele</div>
+            <div class="v-url">btanas.github.io/tana-toys</div>
+        </div>
+    </div>
+
+    <!-- VARIANT 4 -->
+    <div class="variant-wrap">
+        <div class="variant-num">№ 4</div>
+        <div class="v4">
+            <div class="badge">🎁 Uus kollektsioon</div>
+            <div class="logo-row">
+                <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
+                    <circle cx="26" cy="29" r="13" stroke="#E8673A" stroke-width="3.8" fill="white"/>
+                    <circle cx="74" cy="29" r="13" stroke="#E8673A" stroke-width="3.8" fill="white"/>
+                    <circle cx="50" cy="57" r="31" stroke="#E8673A" stroke-width="3.8" fill="white"/>
+                    <circle cx="40" cy="51" r="3" fill="#E8673A"/>
+                    <circle cx="60" cy="51" r="3" fill="#E8673A"/>
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#E8673A"/>
+                    <path d="M44 67 Q50 74 56 67" stroke="#E8673A" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div>
+                    <div class="logo-name">Tana toys</div>
+                    <div class="logo-toys">arendavad mänguasjad</div>
+                </div>
+            </div>
+            <div class="qr-box"><div id="qr4"></div></div>
+            <div class="v-title">Skanni ja telli kohe!</div>
+            <div class="v-sub">Tasuta kohaletoimetamine Eestis</div>
+            <div class="v-url">btanas.github.io/tana-toys</div>
+        </div>
+    </div>
+
+    <!-- VARIANT 5 -->
+    <div class="variant-wrap">
+        <div class="variant-num">№ 5</div>
+        <div class="v5">
+            <div class="logo-row">
+                <svg width="38" height="38" viewBox="0 0 100 100" fill="none">
+                    <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                    <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                    <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                    <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                </svg>
+                <div>
+                    <div class="logo-name">Tana toys</div>
+                    <div class="logo-toys">arendavad mänguasjad</div>
+                </div>
+            </div>
+            <div class="qr-box"><div id="qr5"></div></div>
+            <div class="v-title">Skanni ja osta</div>
+            <div class="v-sub">Kvaliteetsed mänguasjad lastele</div>
+            <div class="pill-row">
+                <div class="pill">🌿 Öko</div>
+                <div class="pill">🚚 Tasuta tarne</div>
+            </div>
+            <div class="v-url">btanas.github.io/tana-toys</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const URL = 'https://btanas.github.io/tana-toys/';
+
+    new QRCode(document.getElementById('qr1'), { text: URL, width: 180, height: 180, colorDark: '#6e3fa3', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
+    new QRCode(document.getElementById('qr2'), { text: URL, width: 180, height: 180, colorDark: '#A07EC8', colorLight: '#f4f0ff', correctLevel: QRCode.CorrectLevel.H });
+    new QRCode(document.getElementById('qr3'), { text: URL, width: 180, height: 180, colorDark: '#c49de0', colorLight: '#12102a', correctLevel: QRCode.CorrectLevel.H });
+    new QRCode(document.getElementById('qr4'), { text: URL, width: 180, height: 180, colorDark: '#E8673A', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
+    new QRCode(document.getElementById('qr5'), { text: URL, width: 180, height: 180, colorDark: '#A07EC8', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
+</script>
+</body>
+</html>

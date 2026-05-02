@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <title>Tana Toys QR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: transparent;
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+        }
+        .v1 {
+            background: linear-gradient(145deg, #6e3fa3 0%, #A07EC8 60%, #c49de0 100%);
+            border-radius: 0;
+            padding: 40px 36px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            box-shadow: 0 20px 60px rgba(110,63,163,0.35);
+        }
+        .qr-box { background: white; border-radius: 16px; padding: 10px; }
+        .qr-box canvas { display: block; border-radius: 8px; }
+        .logo-row { display: flex; align-items: center; gap: 10px; }
+        .logo-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 24px; color: white; }
+        .logo-toys { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: rgba(255,255,255,0.7); text-transform: uppercase; margin-top: 2px; }
+        .v-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 21px; color: white; text-align: center; }
+        .v-sub { font-size: 13px; color: rgba(255,255,255,0.75); text-align: center; }
+        .v-url { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 100px; padding: 7px 18px; font-size: 12px; color: white; font-weight: 600; font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body>
+    <div class="v1">
+        <div class="logo-row">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
+                <circle cx="26" cy="29" r="13" stroke="white" stroke-width="4" fill="rgba(255,255,255,0.15)"/>
+                <circle cx="74" cy="29" r="13" stroke="white" stroke-width="4" fill="rgba(255,255,255,0.15)"/>
+                <circle cx="50" cy="57" r="31" stroke="white" stroke-width="4" fill="rgba(255,255,255,0.15)"/>
+                <circle cx="40" cy="51" r="3" fill="white"/>
+                <circle cx="60" cy="51" r="3" fill="white"/>
+                <ellipse cx="50" cy="61" rx="4" ry="3" fill="white"/>
+                <path d="M44 67 Q50 74 56 67" stroke="white" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+            </svg>
+            <div>
+                <div class="logo-name">Tana toys</div>
+                <div class="logo-toys">arendavad mänguasjad</div>
+            </div>
+        </div>
+        <div class="qr-box"><div id="qr1"></div></div>
+        <div class="v-title">Skanni ja telli</div>
+        <div class="v-sub">Kogu kataloog sinu telefonis</div>
+        <div class="v-url">btanas.github.io/tana-toys</div>
+    </div>
+    <script>
+        new QRCode(document.getElementById('qr1'), {
+            text: 'https://btanas.github.io/tana-toys/',
+            width: 200, height: 200,
+            colorDark: '#6e3fa3', colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    </script>
+</body>
+</html>

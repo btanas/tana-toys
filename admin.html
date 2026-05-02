@@ -924,9 +924,28 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
     const ADMIN_PASSWORD = 'toys2026';
-    const STORAGE_KEY = 'tana_products';
+
+    // ===== FIREBASE =====
+    const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyDbUel1REmLWBQIVeeg-T9iz9LqrfTzTdo",
+        authDomain: "tanatoys-da544.firebaseapp.com",
+        projectId: "tanatoys-da544",
+        storageBucket: "tanatoys-da544.firebasestorage.app",
+        messagingSenderId: "644224600581",
+        appId: "1:644224600581:web:72e244a3c03bad623d6a6c"
+    };
+    let _fsDB = null;
+    function getDB() {
+        if (!_fsDB) {
+            if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+            _fsDB = firebase.firestore();
+        }
+        return _fsDB;
+    }
 
     // ===== DEFAULT PRODUCTS (same as in app.js) =====
     const defaultProducts = [
@@ -980,116 +999,88 @@
         initAdmin();
     }
 
-    // ===== INDEXEDDB FOR IMAGES =====
-    let db = null;
-
-    function openDB() {
-        return new Promise((resolve, reject) => {
-            if (db) return resolve(db);
-            if (!window.indexedDB) { reject('no indexedDB'); return; }
-            const req = indexedDB.open('tana_toys_db', 1);
-            req.onupgradeneeded = e => e.target.result.createObjectStore('images', { keyPath: 'id' });
-            req.onsuccess = e => { db = e.target.result; resolve(db); };
-            req.onerror = e => { console.error('IndexedDB error', e); reject(e); };
-            req.onblocked = e => { console.error('IndexedDB blocked', e); reject(e); };
-        });
-    }
-
+    // ===== FIRESTORE IMAGE STORAGE =====
     async function saveImage(productId, base64, index = 0) {
-        const d = await openDB();
-        return new Promise((resolve, reject) => {
-            const tx = d.transaction('images', 'readwrite');
-            tx.objectStore('images').put({ id: `img_${productId}_${index}`, data: base64 });
-            tx.oncomplete = resolve;
-            tx.onerror = reject;
-        });
+        await getDB().collection('images').doc(`img_${productId}_${index}`).set({ data: base64 });
     }
 
     async function loadImage(productId, index = 0) {
-        const d = await openDB();
-        return new Promise(resolve => {
-            const req = d.transaction('images').objectStore('images').get(`img_${productId}_${index}`);
-            req.onsuccess = () => {
-                if (req.result?.data) return resolve(req.result.data);
-                if (index === 0) {
-                    // legacy key fallback
-                    const r2 = d.transaction('images').objectStore('images').get(productId);
-                    r2.onsuccess = () => resolve(r2.result?.data || null);
-                    r2.onerror = () => resolve(null);
-                } else resolve(null);
-            };
-            req.onerror = () => resolve(null);
-        });
+        try {
+            const doc = await getDB().collection('images').doc(`img_${productId}_${index}`).get();
+            return doc.exists ? doc.data().data : null;
+        } catch { return null; }
     }
 
     async function loadAllImages(productId, count) {
         const imgs = [];
         for (let i = 0; i < count; i++) {
             const img = await loadImage(productId, i);
-            if (img) imgs.push(img);
+            if (img) imgs.push(img); else break;
         }
         return imgs;
     }
 
     async function deleteAllImages(productId, count) {
-        const d = await openDB();
-        return new Promise(resolve => {
-            const tx = d.transaction('images', 'readwrite');
-            const store = tx.objectStore('images');
-            for (let i = 0; i < Math.max(count, 1); i++) store.delete(`img_${productId}_${i}`);
-            store.delete(productId); // legacy
-            tx.oncomplete = resolve; tx.onerror = resolve;
-        });
+        const batch = getDB().batch();
+        for (let i = 0; i < Math.max(count, 1); i++) {
+            batch.delete(getDB().collection('images').doc(`img_${productId}_${i}`));
+        }
+        await batch.commit().catch(() => {});
     }
 
     async function saveVideoFile(productId, base64) {
-        const d = await openDB();
-        return new Promise((resolve, reject) => {
-            const tx = d.transaction('images', 'readwrite');
-            tx.objectStore('images').put({ id: 'video_' + productId, data: base64 });
-            tx.oncomplete = resolve;
-            tx.onerror = reject;
-        });
+        await getDB().collection('images').doc(`video_${productId}`).set({ data: base64 });
     }
 
     async function loadVideoFile(productId) {
-        const d = await openDB();
-        return new Promise(resolve => {
-            const req = d.transaction('images').objectStore('images').get('video_' + productId);
-            req.onsuccess = () => resolve(req.result?.data || null);
-            req.onerror = () => resolve(null);
-        });
+        try {
+            const doc = await getDB().collection('images').doc(`video_${productId}`).get();
+            return doc.exists ? doc.data().data : null;
+        } catch { return null; }
     }
 
     async function deleteImage(productId) {
-        const prods = loadProducts();
+        const prods = await loadProducts();
         const p = prods.find(x => x.id === productId);
         await deleteAllImages(productId, (p?.imageCount || 1) + 5);
     }
 
-    // ===== LOAD / SAVE =====
-    function loadProducts() {
+    // ===== LOAD / SAVE (Firestore) =====
+    async function loadProducts() {
         try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            return saved ? JSON.parse(saved) : defaultProducts;
-        } catch { return defaultProducts; }
+            const snap = await getDB().collection('products').orderBy('order').get();
+            if (snap.empty) return defaultProducts;
+            return snap.docs.map(d => d.data());
+        } catch(e) {
+            console.error('Firestore load error:', e);
+            return defaultProducts;
+        }
     }
 
-    function saveProducts(prods) {
+    async function saveProducts(prods) {
         try {
-            const clean = prods.map(p => { const c = {...p}; delete c.image; return c; });
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
+            const batch = getDB().batch();
+            // Delete all existing
+            const existing = await getDB().collection('products').get();
+            existing.docs.forEach(d => batch.delete(d.ref));
+            // Write new
+            prods.forEach((p, i) => {
+                const clean = {...p}; delete clean.image;
+                clean.order = i;
+                batch.set(getDB().collection('products').doc(String(p.id)), clean);
+            });
+            await batch.commit();
             return true;
-        } catch (e) {
+        } catch(e) {
             showToast('Помилка збереження. Спробуйте ще раз.', 'error');
             return false;
         }
     }
 
     // ===== INIT =====
-    function initAdmin() {
+    async function initAdmin() {
         buildSwatches();
-        renderList();
+        await renderList();
     }
 
     function buildSwatches() {
@@ -1101,7 +1092,7 @@
 
     // ===== RENDER PRODUCT LIST =====
     async function renderList() {
-        const products = loadProducts();
+        const products = await loadProducts();
         const list = document.getElementById('productList');
 
         // Stats
@@ -1362,7 +1353,7 @@
         if (isNaN(priceRaw) || priceRaw <= 0) { showToast('Вкажіть ціну товару', 'error'); document.getElementById('fPrice').focus(); return; }
         if (!nameUk) { showToast('Вкажіть назву товару українською', 'error'); document.getElementById('fNameUk').focus(); return; }
 
-        const products = loadProducts();
+        const products = await loadProducts();
         const maxId = products.reduce((m, p) => Math.max(m, p.id), 0);
 
         const isVideoFile = !!videoData;
@@ -1378,7 +1369,7 @@
             age,
             stars: selectedStars,
             reviews,
-            imageCount: photosChanged ? photoDataArray.length : (editingId ? (loadProducts().find(x=>x.id===editingId)?.imageCount || 0) : photoDataArray.length),
+            imageCount: photosChanged ? photoDataArray.length : (editingId ? (products.find(x=>x.id===editingId)?.imageCount || 0) : photoDataArray.length),
             video: finalVideo,
             names: {
                 et: nameEt || nameUk,
@@ -1408,7 +1399,7 @@
             updatedProducts = [...products, newProduct];
         }
 
-        if (!saveProducts(updatedProducts)) return;
+        if (!await saveProducts(updatedProducts)) return;
 
         if (photosChanged) {
             try {
@@ -1453,18 +1444,13 @@
         document.getElementById('modalOverlay').classList.remove('open');
     }
 
-    function confirmDelete() {
+    async function confirmDelete() {
         if (!pendingDeleteId) return;
-        let products = loadProducts();
+        let products = await loadProducts();
         products = products.filter(x => x.id !== pendingDeleteId);
-        saveProducts(products);
+        await saveProducts(products);
         deleteImage(pendingDeleteId).catch(() => {});
-        loadVideoFile(pendingDeleteId).then(() => {
-            openDB().then(d => {
-                const tx = d.transaction('images', 'readwrite');
-                tx.objectStore('images').delete('video_' + pendingDeleteId);
-            });
-        }).catch(() => {});
+        getDB().collection('images').doc(`video_${pendingDeleteId}`).delete().catch(() => {});
         renderList();
         closeModal();
         showToast(`Товар видалено`, 'error');
@@ -1476,7 +1462,7 @@
 
     // ===== EDIT PRODUCT =====
     async function startEdit(id) {
-        const products = loadProducts();
+        const products = await loadProducts();
         const p = products.find(x => x.id === id);
         if (!p) return;
 
@@ -1564,7 +1550,7 @@
         btn.textContent = '⏳ Зберігаю...';
         btn.disabled = true;
 
-        const products = loadProducts();
+        const products = await loadProducts();
         const data = { version: 1, date: new Date().toISOString(), products: [] };
 
         for (const p of products) {
@@ -1603,7 +1589,7 @@
                 return clean;
             });
 
-            saveProducts(products);
+            await saveProducts(products);
 
             for (const p of data.products) {
                 if (p._images?.length) {
@@ -1630,7 +1616,7 @@
         btn.disabled = true;
         btn.textContent = '⏳ Перекладаю...';
 
-        const products = loadProducts();
+        const products = await loadProducts();
         const langs = ['et','en','lt','lv','ru'];
         let done = 0;
 
@@ -1658,7 +1644,7 @@
             btn.textContent = `⏳ ${done}/${products.length}...`;
         }
 
-        saveProducts(products);
+        await saveProducts(products);
         btn.disabled = false;
         btn.textContent = '✓ Готово! Оновіть магазин (F5)';
         btn.style.background = 'var(--green)';
@@ -1688,18 +1674,18 @@
             row.addEventListener('dragleave', () => {
                 row.classList.remove('drag-over');
             });
-            row.addEventListener('drop', e => {
+            row.addEventListener('drop', async e => {
                 e.preventDefault();
                 row.classList.remove('drag-over');
                 const dropId = parseInt(row.dataset.id);
                 if (dragSrcId === dropId) return;
-                const products = loadProducts();
+                const products = await loadProducts();
                 const fromIdx = products.findIndex(p => p.id === dragSrcId);
                 const toIdx = products.findIndex(p => p.id === dropId);
                 if (fromIdx === -1 || toIdx === -1) return;
                 const moved = products.splice(fromIdx, 1)[0];
                 products.splice(toIdx, 0, moved);
-                saveProducts(products);
+                await saveProducts(products);
                 renderList();
             });
         });

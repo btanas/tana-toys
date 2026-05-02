@@ -240,30 +240,28 @@ const defaultProducts = [
     }
 ];
 
-// ===== INDEXEDDB FOR IMAGES =====
-let _db = null;
-function openDB() {
-    return new Promise((resolve, reject) => {
-        if (_db) return resolve(_db);
-        const req = indexedDB.open('tana_toys_db', 1);
-        req.onupgradeneeded = e => e.target.result.createObjectStore('images', { keyPath: 'id' });
-        req.onsuccess = e => { _db = e.target.result; resolve(_db); };
-        req.onerror = () => reject();
-    });
+// ===== FIREBASE =====
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDbUel1REmLWBQIVeeg-T9iz9LqrfTzTdo",
+    authDomain: "tanatoys-da544.firebaseapp.com",
+    projectId: "tanatoys-da544",
+    storageBucket: "tanatoys-da544.firebasestorage.app",
+    messagingSenderId: "644224600581",
+    appId: "1:644224600581:web:72e244a3c03bad623d6a6c"
+};
+let _fsDB = null;
+function getDB() {
+    if (!_fsDB) {
+        if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+        _fsDB = firebase.firestore();
+    }
+    return _fsDB;
 }
+
 function loadImage(productId, index = 0) {
-    return openDB().then(d => new Promise(resolve => {
-        const req = d.transaction('images').objectStore('images').get(`img_${productId}_${index}`);
-        req.onsuccess = () => {
-            if (req.result?.data) return resolve(req.result.data);
-            if (index === 0) {
-                const r2 = d.transaction('images').objectStore('images').get(productId);
-                r2.onsuccess = () => resolve(r2.result?.data || null);
-                r2.onerror = () => resolve(null);
-            } else resolve(null);
-        };
-        req.onerror = () => resolve(null);
-    })).catch(() => null);
+    return getDB().collection('images').doc(`img_${productId}_${index}`).get()
+        .then(doc => doc.exists ? doc.data().data : null)
+        .catch(() => null);
 }
 
 async function loadAllImages(productId, count) {
@@ -276,26 +274,24 @@ async function loadAllImages(productId, count) {
 }
 
 function loadVideoFile(productId) {
-    return openDB().then(d => new Promise(resolve => {
-        const req = d.transaction('images').objectStore('images').get('video_' + productId);
-        req.onsuccess = () => resolve(req.result?.data || null);
-        req.onerror = () => resolve(null);
-    })).catch(() => null);
+    return getDB().collection('images').doc(`video_${productId}`).get()
+        .then(doc => doc.exists ? doc.data().data : null)
+        .catch(() => null);
 }
 
-// ===== LOAD / SAVE PRODUCTS =====
-function loadProducts() {
+// ===== LOAD PRODUCTS =====
+async function fetchProducts() {
     try {
-        const saved = localStorage.getItem('tana_products');
-        return saved ? JSON.parse(saved) : defaultProducts;
-    } catch { return defaultProducts; }
+        const snap = await getDB().collection('products').orderBy('order').get();
+        if (snap.empty) return defaultProducts;
+        return snap.docs.map(d => d.data());
+    } catch(e) {
+        console.error('Firestore error:', e);
+        return defaultProducts;
+    }
 }
 
-function saveProducts(prods) {
-    localStorage.setItem('tana_products', JSON.stringify(prods));
-}
-
-let products = loadProducts();
+let products = [];
 let openModalProductId = null;
 
 // ===== LANGUAGE =====
@@ -334,7 +330,6 @@ function setLanguage(lang) {
 
 // ===== RENDER PRODUCTS =====
 function renderProducts(filter) {
-    products = loadProducts();
     const grid = document.getElementById('productsGrid');
     const filtered = (!filter || filter === 'all') ? products : products.filter(p => p.age === filter);
 
@@ -896,4 +891,7 @@ function showToast(msg) {
 })();
 
 // ===== INIT =====
-setLanguage(currentLang);
+(async () => {
+    products = await fetchProducts();
+    setLanguage(currentLang);
+})();

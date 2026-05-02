@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Tana Toys — QR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #f4f0ff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            padding: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 32px;
+            padding: 48px 52px;
+            box-shadow: 0 24px 80px rgba(160,126,200,0.2), 0 4px 16px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
+            max-width: 380px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -80px; right: -80px;
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(160,126,200,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; left: -60px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(232,103,58,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+
+        .logo-tana {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 900;
+            font-size: 26px;
+            color: #A07EC8;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-toys {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            color: #E8673A;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: #999;
+            text-align: center;
+            letter-spacing: 0.04em;
+            z-index: 1;
+            margin-top: -10px;
+        }
+
+        .qr-wrap {
+            position: relative;
+            z-index: 1;
+            padding: 16px;
+            background: linear-gradient(135deg, #A07EC8 0%, #c49de0 100%);
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(160,126,200,0.35);
+        }
+
+        .qr-inner {
+            background: white;
+            border-radius: 14px;
+            padding: 10px;
+        }
+
+        .qr-inner canvas {
+            display: block;
+            border-radius: 8px;
+        }
+
+        .label {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            color: #1a1a2e;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .sublabel {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            z-index: 1;
+            margin-top: -16px;
+        }
+
+        .url-pill {
+            background: #f4f0ff;
+            border: 1.5px solid #d8c8f0;
+            border-radius: 100px;
+            padding: 8px 20px;
+            font-size: 12px;
+            color: #A07EC8;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            z-index: 1;
+        }
+
+        .dots {
+            display: flex;
+            gap: 6px;
+            z-index: 1;
+        }
+
+        .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+        }
+
+        @media print {
+            body { background: white; }
+            .card { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">
+            <svg width="48" height="48" viewBox="0 0 100 100" fill="none">
+                <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
+                <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
+                <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
+                <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
+                <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+            </svg>
+            <div class="logo-text">
+                <span class="logo-tana">Tana</span>
+                <span class="logo-toys">toys</span>
+            </div>
+        </div>
+
+        <p class="tagline">Розвивальні іграшки для дітей</p>
+
+        <div class="qr-wrap">
+            <div class="qr-inner">
+                <div id="qr"></div>
+            </div>
+        </div>
+
+        <div class="label">Скануй та замовляй</div>
+        <p class="sublabel">Весь каталог у тебе в телефоні</p>
+
+        <div class="url-pill">btanas.github.io/tana-toys</div>
+
+        <div class="dots">
+            <div class="dot" style="background:#A07EC8"></div>
+            <div class="dot" style="background:#E8673A"></div>
+            <div class="dot" style="background:#A07EC8; opacity:0.4"></div>
+        </div>
+    </div>
+
+    <script>
+        new QRCode(document.getElementById('qr'), {
+            text: 'https://btanas.github.io/tana-toys/',
+            width: 200,
+            height: 200,
+            colorDark: '#A07EC8',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    </script>
+</body>
+</html>
