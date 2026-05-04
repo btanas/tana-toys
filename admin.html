@@ -800,8 +800,15 @@
                     <!-- Video -->
                     <div class="form-row single">
                         <div class="form-group">
-                            <label class="form-label">Посилання на відео <span>(YouTube або інше, необов'язково)</span></label>
-                            <input type="text" id="fVideoUrl" class="form-input" placeholder="https://www.youtube.com/watch?v=...">
+                            <label class="form-label">Відео товару <span>(необов'язково)</span></label>
+                            <div class="upload-area" id="videoArea" onclick="document.getElementById('fVideo').click()" style="cursor:pointer">
+                                <div id="videoPreview">
+                                    <div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>
+                                </div>
+                            </div>
+                            <input type="file" id="fVideo" accept="video/*" style="display:none" onchange="handleVideo(this)">
+                            <button type="button" class="btn-clear" id="clearVideoBtn" style="display:none" onclick="clearVideo()">✕ Видалити відео</button>
+                            <input type="hidden" id="fVideoUrl" value="">
                         </div>
                     </div>
 
@@ -958,6 +965,45 @@
     let photoDataArray = [];
     let photosChanged = false;
     let editingId = null;
+
+    // ===== CLOUDINARY CONFIG =====
+    const CLOUDINARY_CLOUD = 'ilona30ie';
+    const CLOUDINARY_PRESET = 'tana_toys';
+
+    let videoFile = null;
+    let videoChanged = false;
+    let editingOriginalVideo = null;
+
+    function handleVideo(input) {
+        const file = input.files[0];
+        if (!file) return;
+        videoFile = file;
+        videoChanged = true;
+        const previewUrl = URL.createObjectURL(file);
+        document.getElementById('videoPreview').innerHTML = `<video src="${previewUrl}" style="max-width:100%;max-height:120px;border-radius:8px" controls></video>`;
+        document.getElementById('clearVideoBtn').style.display = 'inline-block';
+        document.getElementById('videoArea').onclick = null;
+    }
+
+    function clearVideo() {
+        videoFile = null;
+        videoChanged = true;
+        document.getElementById('fVideo').value = '';
+        document.getElementById('fVideoUrl').value = '';
+        document.getElementById('videoPreview').innerHTML = '<div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>';
+        document.getElementById('clearVideoBtn').style.display = 'none';
+        document.getElementById('videoArea').onclick = () => document.getElementById('fVideo').click();
+    }
+
+    async function uploadToCloudinary(file) {
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', CLOUDINARY_PRESET);
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`, { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
+        return data.secure_url;
+    }
 
     // ===== AUTH =====
     function login() {
@@ -1331,7 +1377,25 @@
         const maxId = products.reduce((m, p) => Math.max(m, p.id), 0);
         const targetId = editingId || (maxId + 1);
 
-        const finalVideo = document.getElementById('fVideoUrl').value.trim() || null;
+        let finalVideo;
+        if (editingId && !videoChanged) {
+            finalVideo = editingOriginalVideo;
+        } else if (videoChanged && videoFile) {
+            btn.disabled = true;
+            btn.textContent = '⏳ Завантаження відео...';
+            try {
+                finalVideo = await uploadToCloudinary(videoFile);
+            } catch(e) {
+                showToast('Помилка відео: ' + e.message, 'error');
+                btn.disabled = false;
+                btn.textContent = editingId ? 'Зберегти зміни' : 'Додати товар';
+                return;
+            }
+        } else if (videoChanged && !videoFile) {
+            finalVideo = null;
+        } else {
+            finalVideo = null;
+        }
 
         const newProduct = {
             id: maxId + 1,
@@ -1473,8 +1537,20 @@
             renderPhotoThumbs();
         }
 
-        // Video URL
-        document.getElementById('fVideoUrl').value = (p.video && p.video !== 'idb') ? p.video : '';
+        // Video
+        editingOriginalVideo = p.video || null;
+        videoFile = null;
+        videoChanged = false;
+        document.getElementById('fVideo').value = '';
+        document.getElementById('fVideoUrl').value = '';
+        document.getElementById('videoPreview').innerHTML = '<div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>';
+        document.getElementById('clearVideoBtn').style.display = 'none';
+        document.getElementById('videoArea').onclick = () => document.getElementById('fVideo').click();
+        if (p.video && p.video !== 'idb') {
+            document.getElementById('videoPreview').innerHTML = `<video src="${p.video}" style="max-width:100%;max-height:120px;border-radius:8px" controls></video>`;
+            document.getElementById('clearVideoBtn').style.display = 'inline-block';
+            document.getElementById('videoArea').onclick = null;
+        }
 
         // Open form and scroll to it
         document.getElementById('addFormCard').classList.add('open');
