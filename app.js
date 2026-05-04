@@ -397,9 +397,16 @@ function productDesc(p) {
     return p.descs[currentLang] || p.descs.uk || p.descs.en || p.descs.et || '';
 }
 
-function buildModalSlider(container, imgs, videoProduct) {
+async function buildModalSlider(container, imgs, videoProduct) {
     const totalSlides = imgs.length + (videoProduct ? 1 : 0);
     let current = 0;
+
+    // Pre-load video blob URL before rendering
+    let preloadedVideoSrc = null;
+    if (videoProduct?.video === 'idb') {
+        const base64 = await loadVideoFile(videoProduct.id);
+        if (base64) preloadedVideoSrc = base64ToBlobUrl(base64) || base64;
+    }
 
     const slides = imgs.map((src, i) => ({type:'photo', src}));
     if (videoProduct) slides.push({type:'video', p: videoProduct});
@@ -424,7 +431,7 @@ function buildModalSlider(container, imgs, videoProduct) {
                 <img src="${slide.src}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onclick="sliderGoTo(${container.dataset.sid},${current+1})">
                 ${arrowsHtml}${dotsHtml}`;
         } else {
-            container.innerHTML = `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">${getVideoEmbed(slide.p)}</div>${arrowsHtml}${dotsHtml}`;
+            container.innerHTML = `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">${getVideoEmbed(slide.p, preloadedVideoSrc)}</div>${arrowsHtml}${dotsHtml}`;
         }
     }
 
@@ -441,14 +448,28 @@ window.sliderGoTo = function(sid, expr) {
     if (fn) fn(eval(String(expr)));
 };
 
-function getVideoEmbed(p) {
+function base64ToBlobUrl(base64) {
+    try {
+        const [header, data] = base64.split(',');
+        const mime = header.match(/:(.*?);/)[1];
+        const binary = atob(data);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        return URL.createObjectURL(new Blob([bytes], { type: mime }));
+    } catch(e) { return null; }
+}
+
+function getVideoEmbed(p, preloadedSrc) {
     if (!p.video) return '';
     if (p.video === 'idb') {
-        loadVideoFile(p.id).then(src => {
-            if (src) {
-                const el = document.querySelector(`[data-vid="${p.id}"]`);
-                if (el) el.src = src;
-            }
+        if (preloadedSrc) {
+            return `<video src="${preloadedSrc}" style="max-width:100%;max-height:100%;border-radius:4px" controls></video>`;
+        }
+        loadVideoFile(p.id).then(base64 => {
+            if (!base64) return;
+            const blobUrl = base64ToBlobUrl(base64) || base64;
+            const el = document.querySelector(`[data-vid="${p.id}"]`);
+            if (el) el.src = blobUrl;
         });
         return `<video data-vid="${p.id}" style="max-width:100%;max-height:100%;border-radius:4px" controls></video>`;
     }
@@ -532,8 +553,9 @@ async function openVideo(e, id) {
     let src = p.video;
 
     if (src === 'idb') {
-        src = await loadVideoFile(id);
-        if (!src) return;
+        const base64 = await loadVideoFile(id);
+        if (!base64) return;
+        src = base64ToBlobUrl(base64) || base64;
     }
 
     const ytMatch = src.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
