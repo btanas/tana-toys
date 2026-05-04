@@ -996,13 +996,26 @@
     }
 
     async function uploadToCloudinary(file) {
-        const fd = new FormData();
-        fd.append('file', file);
-        fd.append('upload_preset', CLOUDINARY_PRESET);
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`, { method: 'POST', body: fd });
-        const data = await res.json();
-        if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
-        return data.secure_url;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 90000);
+        try {
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('upload_preset', CLOUDINARY_PRESET);
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/video/upload`, {
+                method: 'POST', body: fd, signal: controller.signal
+            });
+            clearTimeout(timeout);
+            const text = await res.text();
+            let data;
+            try { data = JSON.parse(text); } catch { throw new Error('Невірна відповідь сервера: ' + text.slice(0, 100)); }
+            if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
+            return data.secure_url;
+        } catch(e) {
+            clearTimeout(timeout);
+            if (e.name === 'AbortError') throw new Error('Час вийшов (90с) — перевірте інтернет або спробуйте менший файл');
+            throw e;
+        }
     }
 
     // ===== AUTH =====
