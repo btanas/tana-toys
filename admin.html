@@ -926,6 +926,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script>
     const ADMIN_PASSWORD = 'toys2026';
 
@@ -965,6 +966,7 @@
     let photosChanged = false;
     let editingId = null;
     let videoData = null;
+    let videoFile = null;
     let videoMode = 'url';
     let videoChanged = false;
     let editingOriginalVideo = null;
@@ -1289,18 +1291,17 @@
     function handleVideo(input) {
         const file = input.files[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = e => {
-            videoData = e.target.result;
-            videoChanged = true;
-            document.getElementById('videoPreview').innerHTML = `<video src="${videoData}" style="max-width:100%;max-height:120px;border-radius:8px" controls></video>`;
-            document.getElementById('clearVideoBtn').style.display = 'inline-block';
-        };
-        reader.readAsDataURL(file);
+        videoFile = file;
+        videoChanged = true;
+        const previewUrl = URL.createObjectURL(file);
+        videoData = previewUrl;
+        document.getElementById('videoPreview').innerHTML = `<video src="${previewUrl}" style="max-width:100%;max-height:120px;border-radius:8px" controls></video>`;
+        document.getElementById('clearVideoBtn').style.display = 'inline-block';
     }
 
     function clearVideo() {
         videoData = null;
+        videoFile = null;
         videoChanged = true;
         document.getElementById('fVideo').value = '';
         document.getElementById('videoPreview').innerHTML = '<div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>';
@@ -1359,12 +1360,25 @@
 
         const products = await loadProducts();
         const maxId = products.reduce((m, p) => Math.max(m, p.id), 0);
+        const targetId = editingId || (maxId + 1);
 
         let finalVideo;
         if (editingId && !videoChanged) {
             finalVideo = editingOriginalVideo;
+        } else if (videoChanged && videoFile) {
+            btn.textContent = 'Завантаження відео...';
+            try {
+                const ref = firebase.storage().ref(`videos/${targetId}`);
+                await ref.put(videoFile);
+                finalVideo = await ref.getDownloadURL();
+            } catch(e) {
+                showToast('Помилка завантаження відео: ' + e.message, 'error');
+                finalVideo = editingOriginalVideo || null;
+            }
+        } else if (videoChanged && !videoFile) {
+            finalVideo = null;
         } else {
-            finalVideo = videoData ? 'idb' : null;
+            finalVideo = null;
         }
 
         const newProduct = {
@@ -1397,7 +1411,6 @@
             }
         };
 
-        const targetId = editingId || (maxId + 1);
         newProduct.id = targetId;
 
         let updatedProducts;
@@ -1417,10 +1430,6 @@
                 }
                 photosChanged = false;
             } catch(e) { showToast('Збережено, але фото не збереглось', 'error'); }
-        }
-        if (videoChanged && videoData) {
-            try { await saveVideoFile(targetId, videoData); }
-            catch(e) { showToast('Збережено, але відео не збереглось', 'error'); }
         }
 
         const wasEditing = !!editingId;
@@ -1516,11 +1525,17 @@
         // Video: reset and load existing without marking as changed
         editingOriginalVideo = p.video || null;
         videoData = null;
+        videoFile = null;
         videoChanged = false;
         document.getElementById('fVideo').value = '';
         document.getElementById('videoPreview').innerHTML = '<div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>';
         document.getElementById('clearVideoBtn').style.display = 'none';
-        if (p.video === 'idb') {
+        if (p.video && p.video !== 'idb') {
+            // Firebase Storage URL — show directly
+            document.getElementById('videoPreview').innerHTML = `<video src="${p.video}" style="max-width:100%;max-height:120px;border-radius:8px" controls></video>`;
+            document.getElementById('clearVideoBtn').style.display = 'inline-block';
+        } else if (p.video === 'idb') {
+            // Legacy Firestore — load base64
             const vid = await loadVideoFile(id);
             if (vid) {
                 videoData = vid;
