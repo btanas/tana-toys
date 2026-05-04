@@ -689,9 +689,10 @@ window.updateDeliveryUI = function() {
 };
 
 // ===== EMAILJS CONFIG (замінити на свої ключі після реєстрації на emailjs.com) =====
-const EMAILJS_PUBLIC_KEY  = 'kWQ0_Q1VuHtGtPlbt';
-const EMAILJS_SERVICE_ID  = 'service_2eu7v45';
-const EMAILJS_TEMPLATE_ID = 'template_xpohnts';
+const EMAILJS_PUBLIC_KEY          = 'kWQ0_Q1VuHtGtPlbt';
+const EMAILJS_SERVICE_ID          = 'service_2eu7v45';
+const EMAILJS_TEMPLATE_ID         = 'template_xpohnts';     // лист продавцю
+const EMAILJS_CUSTOMER_TEMPLATE_ID = 'template_69wovmg';    // підтвердження покупцю
 const BANK_IBAN      = 'EE10 2200 2220 9067 1557';
 const BANK_RECIPIENT = 'Borys Tanasiichuk';
 
@@ -749,6 +750,25 @@ window.submitOrder = async function() {
         btn.textContent = 'Підтвердити замовлення';
         showToast('Помилка відправки. Напишіть нам на tanatoys.info@gmail.com', 'error');
         return;
+    }
+
+    // Підтвердження покупцю
+    try {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CUSTOMER_TEMPLATE_ID, {
+            to_email:        email,
+            customer_name:   `${firstName} ${lastName}`,
+            order_number:    orderNum,
+            items:           itemsText,
+            delivery_method: deliveryLabels[delivery],
+            city:            city,
+            location:        location,
+            delivery_cost:   `€${deliveryCost.toFixed(2)}`,
+            total:           `€${total.toFixed(2)}`,
+            iban:            BANK_IBAN,
+            bank_recipient:  BANK_RECIPIENT
+        });
+    } catch(e) {
+        console.warn('Customer confirmation email failed:', e);
     }
 
     // Показати success екран
