@@ -966,6 +966,8 @@
     let editingId = null;
     let videoData = null;
     let videoMode = 'url';
+    let videoChanged = false;
+    let editingOriginalVideo = null;
 
     // ===== AUTH =====
     function login() {
@@ -1290,6 +1292,7 @@
         const reader = new FileReader();
         reader.onload = e => {
             videoData = e.target.result;
+            videoChanged = true;
             document.getElementById('videoPreview').innerHTML = `<video src="${videoData}" style="max-width:100%;max-height:120px;border-radius:8px" controls></video>`;
             document.getElementById('clearVideoBtn').style.display = 'inline-block';
         };
@@ -1298,6 +1301,7 @@
 
     function clearVideo() {
         videoData = null;
+        videoChanged = true;
         document.getElementById('fVideo').value = '';
         document.getElementById('videoPreview').innerHTML = '<div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>';
         document.getElementById('clearVideoBtn').style.display = 'none';
@@ -1356,8 +1360,12 @@
         const products = await loadProducts();
         const maxId = products.reduce((m, p) => Math.max(m, p.id), 0);
 
-        const isVideoFile = !!videoData;
-        const finalVideo = isVideoFile ? 'idb' : null;
+        let finalVideo;
+        if (editingId && !videoChanged) {
+            finalVideo = editingOriginalVideo;
+        } else {
+            finalVideo = videoData ? 'idb' : null;
+        }
 
         const newProduct = {
             id: maxId + 1,
@@ -1410,13 +1418,14 @@
                 photosChanged = false;
             } catch(e) { showToast('Збережено, але фото не збереглось', 'error'); }
         }
-        if (isVideoFile) {
+        if (videoChanged && videoData) {
             try { await saveVideoFile(targetId, videoData); }
             catch(e) { showToast('Збережено, але відео не збереглось', 'error'); }
         }
 
         const wasEditing = !!editingId;
         editingId = null;
+        editingOriginalVideo = null;
         document.getElementById('formTitle').textContent = 'Додати новий товар';
         document.getElementById('formSubmitLabel').textContent = 'Додати товар';
         document.getElementById('cancelEditBtn').style.display = 'none';
@@ -1504,6 +1513,22 @@
             renderPhotoThumbs();
         }
 
+        // Video: reset and load existing without marking as changed
+        editingOriginalVideo = p.video || null;
+        videoData = null;
+        videoChanged = false;
+        document.getElementById('fVideo').value = '';
+        document.getElementById('videoPreview').innerHTML = '<div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>';
+        document.getElementById('clearVideoBtn').style.display = 'none';
+        if (p.video === 'idb') {
+            const vid = await loadVideoFile(id);
+            if (vid) {
+                videoData = vid;
+                document.getElementById('videoPreview').innerHTML = `<video src="${vid}" style="max-width:100%;max-height:120px;border-radius:8px" controls></video>`;
+                document.getElementById('clearVideoBtn').style.display = 'inline-block';
+            }
+        }
+
         // Open form and scroll to it
         document.getElementById('addFormCard').classList.add('open');
         document.getElementById('addFormCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1511,6 +1536,7 @@
 
     function cancelEdit() {
         editingId = null;
+        editingOriginalVideo = null;
         document.getElementById('formTitle').textContent = 'Додати новий товар';
         document.getElementById('formSubmitLabel').textContent = 'Додати товар';
         document.getElementById('cancelEditBtn').style.display = 'none';
