@@ -670,6 +670,83 @@ function openCheckout() {
 
     document.getElementById('checkoutOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
+
+    populateTerminals();
+    document.getElementById('coCity').addEventListener('change', populateTerminals);
+}
+
+// ===== PARCEL TERMINALS =====
+const terminalsCache = {};
+
+async function fetchOmnivaTerminals() {
+    if (terminalsCache.omniva) return terminalsCache.omniva;
+    try {
+        const res = await fetch('https://www.omniva.ee/locations.json');
+        const data = await res.json();
+        terminalsCache.omniva = data
+            .filter(t => t.TYPE === 0)
+            .map(t => ({ name: t.NAME, address: t.A3_NAME || '', city: t.A1_NAME || t.A2_NAME || '' }));
+    } catch(e) { terminalsCache.omniva = []; }
+    return terminalsCache.omniva;
+}
+
+async function fetchSmartpostTerminals() {
+    if (terminalsCache.smartpost) return terminalsCache.smartpost;
+    try {
+        const res = await fetch('https://api.smartpost.ee/v1/getParcelmachineList');
+        const data = await res.json();
+        const list = data.parcelmachines || data.locations || (Array.isArray(data) ? data : []);
+        terminalsCache.smartpost = list.map(t => ({
+            name: t.groupName || t.name || '',
+            address: t.addressLine1 || t.address || '',
+            city: t.city || ''
+        }));
+    } catch(e) { terminalsCache.smartpost = []; }
+    return terminalsCache.smartpost;
+}
+
+async function fetchDpdTerminals() {
+    if (terminalsCache.dpd) return terminalsCache.dpd;
+    try {
+        const res = await fetch('https://delivery.dpd.com/api/common/v1/points?countryCode=EE&serviceCode=PS&maxCount=500');
+        const data = await res.json();
+        const list = data.pickupPoints || data.data || (Array.isArray(data) ? data : []);
+        terminalsCache.dpd = list.map(t => ({
+            name: t.company || t.name || '',
+            address: t.address || t.street || '',
+            city: t.city || ''
+        }));
+    } catch(e) { terminalsCache.dpd = []; }
+    return terminalsCache.dpd;
+}
+
+async function populateTerminals() {
+    const delivery = document.querySelector('input[name="delivery"]:checked')?.value;
+    const city = document.getElementById('coCity').value;
+    const select = document.getElementById('coTerminal');
+    if (!select || delivery === 'courier') return;
+
+    select.innerHTML = '<option value="">⏳ Завантаження...</option>';
+
+    let terminals = [];
+    if (delivery === 'omniva') terminals = await fetchOmnivaTerminals();
+    else if (delivery === 'smartpost') terminals = await fetchSmartpostTerminals();
+    else if (delivery === 'dpd') terminals = await fetchDpdTerminals();
+
+    const filtered = city
+        ? terminals.filter(t => t.city && t.city.toLowerCase().includes(city.toLowerCase()))
+        : terminals;
+
+    if (!filtered.length) {
+        select.innerHTML = '<option value="">— Пакетоматів не знайдено —</option>';
+        return;
+    }
+
+    select.innerHTML = '<option value="">— Оберіть пакетомат —</option>' +
+        filtered.map(t => {
+            const label = t.address ? `${t.name} — ${t.address}` : t.name;
+            return `<option value="${label}">${label}</option>`;
+        }).join('');
 }
 
 window.updateDeliveryUI = function() {
@@ -683,8 +760,9 @@ window.updateDeliveryUI = function() {
     } else {
         terminalField.style.display = '';
         addressField.style.display = 'none';
-        const labels = { omniva: 'Omniva pakiautomaat', smartpost: 'SmartPOST pakiautomaat', dpd: 'DPD pakiautomaat' };
-        terminalLabel.textContent = labels[val] || 'Назва пакетомату';
+        const labels = { omniva: 'Omniva', smartpost: 'SmartPOST', dpd: 'DPD' };
+        terminalLabel.textContent = `${labels[val] || ''} pakiautomaat`;
+        populateTerminals();
     }
 };
 
