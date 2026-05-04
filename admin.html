@@ -1392,9 +1392,7 @@
         const targetId = editingId || (maxId + 1);
 
         let finalVideo;
-        if (editingId && !videoChanged) {
-            finalVideo = editingOriginalVideo;
-        } else if (videoChanged && videoFile) {
+        if (videoFile instanceof File) {
             btn.disabled = true;
             btn.textContent = '⏳ Завантаження відео...';
             try {
@@ -1405,8 +1403,8 @@
                 btn.textContent = editingId ? 'Зберегти зміни' : 'Додати товар';
                 return;
             }
-        } else if (videoChanged && !videoFile) {
-            finalVideo = null;
+        } else if (editingId) {
+            finalVideo = videoChanged ? null : editingOriginalVideo;
         } else {
             finalVideo = null;
         }
@@ -1602,6 +1600,9 @@
         document.getElementById('fDescRu').value = '';
         clearPhoto();
         document.getElementById('fVideoUrl').value = '';
+        videoFile = null;
+        videoChanged = false;
+        editingOriginalVideo = null;
         setStar(5);
         buildSwatches();
     }
