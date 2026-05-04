@@ -1347,6 +1347,7 @@
 
     // ===== ADD PRODUCT =====
     async function addProduct() {
+        const btn = document.getElementById('formSubmitBtn');
         const emoji = document.getElementById('fEmoji').value.trim() || '🧩';
         const bg    = document.getElementById('fBg').value.trim() || '#FFE5D0';
         const priceRaw = parseFloat(document.getElementById('fPrice').value);
