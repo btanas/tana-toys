@@ -995,27 +995,28 @@
         document.getElementById('videoArea').onclick = () => document.getElementById('fVideo').click();
     }
 
-    async function uploadToCloudinary(file) {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 90000);
-        try {
+    function uploadToCloudinary(file, onProgress) {
+        return new Promise((resolve, reject) => {
             const fd = new FormData();
             fd.append('file', file);
             fd.append('upload_preset', CLOUDINARY_PRESET);
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/auto/upload`, {
-                method: 'POST', body: fd, signal: controller.signal
-            });
-            clearTimeout(timeout);
-            const text = await res.text();
-            let data;
-            try { data = JSON.parse(text); } catch { throw new Error('Невірна відповідь сервера: ' + text.slice(0, 100)); }
-            if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
-            return data.secure_url;
-        } catch(e) {
-            clearTimeout(timeout);
-            if (e.name === 'AbortError') throw new Error('Час вийшов (90с) — перевірте інтернет або спробуйте менший файл');
-            throw e;
-        }
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/auto/upload`);
+            xhr.timeout = 120000;
+            xhr.upload.onprogress = e => {
+                if (e.lengthComputable && onProgress) onProgress(Math.round(e.loaded / e.total * 100));
+            };
+            xhr.onload = () => {
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    if (data.secure_url) resolve(data.secure_url);
+                    else reject(new Error(data.error?.message || 'Upload failed (status ' + xhr.status + ')'));
+                } catch { reject(new Error('Невірна відповідь: ' + xhr.responseText.slice(0, 80))); }
+            };
+            xhr.onerror = () => reject(new Error('Помилка мережі — перевірте інтернет'));
+            xhr.ontimeout = () => reject(new Error('Час вийшов (120с) — файл занадто великий або повільний інтернет'));
+            xhr.send(fd);
+        });
     }
 
     // ===== AUTH =====
@@ -1394,9 +1395,11 @@
         let finalVideo;
         if (videoFile instanceof File) {
             btn.disabled = true;
-            btn.textContent = '⏳ Завантаження відео...';
+            btn.textContent = '⏳ Відео 0%...';
             try {
-                finalVideo = await uploadToCloudinary(videoFile);
+                finalVideo = await uploadToCloudinary(videoFile, pct => {
+                    btn.textContent = `⏳ Відео ${pct}%...`;
+                });
             } catch(e) {
                 showToast('Помилка відео: ' + e.message, 'error');
                 btn.disabled = false;
