@@ -1392,18 +1392,21 @@
         const maxId = products.reduce((m, p) => Math.max(m, p.id), 0);
         const targetId = editingId || (maxId + 1);
 
+        const lbl = document.getElementById('formSubmitLabel');
         let finalVideo;
         if (videoFile instanceof File) {
             btn.disabled = true;
-            btn.textContent = '⏳ Відео 0%...';
+            lbl.textContent = '⏳ Відео 0%...';
             try {
                 finalVideo = await uploadToCloudinary(videoFile, pct => {
-                    btn.textContent = `⏳ Відео ${pct}%...`;
+                    lbl.textContent = `⏳ Відео ${pct}%...`;
                 });
             } catch(e) {
                 showToast('Помилка відео: ' + e.message, 'error');
                 btn.disabled = false;
-                btn.textContent = editingId ? 'Зберегти зміни' : 'Додати товар';
+                lbl.textContent = editingId ? 'Зберегти зміни' : 'Додати товар';
+                videoFile = null;
+                videoChanged = false;
                 return;
             }
         } else if (editingId) {
