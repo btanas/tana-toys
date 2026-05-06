@@ -1395,12 +1395,29 @@
         const badge = document.getElementById('fBadge').value || null;
         const reviews = parseInt(document.getElementById('fReviews').value) || 0;
 
+        const nameUk = document.getElementById('fNameUk').value.trim();
+
+        // If translations not done yet — run them now before saving
+        if (nameUk && !document.getElementById('fNameEt').value.trim()) {
+            clearTimeout(translateTimer);
+            const lbl = document.getElementById('formSubmitLabel');
+            const origLabel = lbl.textContent;
+            lbl.textContent = '⏳ Перекладаю...';
+            btn.disabled = true;
+            await translateAll(nameUk);
+            btn.disabled = false;
+            lbl.textContent = origLabel;
+        }
+        if (document.getElementById('fDescUk').value.trim() && !document.getElementById('fDescEt').value.trim()) {
+            clearTimeout(descTranslateTimer);
+            await translateDesc(document.getElementById('fDescUk').value.trim());
+        }
+
         const nameEt = document.getElementById('fNameEt').value.trim();
         const nameEn = document.getElementById('fNameEn').value.trim();
         const nameLt = document.getElementById('fNameLt').value.trim();
         const nameLv = document.getElementById('fNameLv').value.trim();
         const nameRu = document.getElementById('fNameRu').value.trim();
-        const nameUk = document.getElementById('fNameUk').value.trim();
 
         const descUk = document.getElementById('fDescUk').value.trim();
         const descEt = document.getElementById('fDescEt').value.trim();
