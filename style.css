@@ -105,7 +105,7 @@ a { text-decoration: none; color: inherit; }
     display: flex;
     align-items: center;
     gap: 32px;
-    height: 66px;
+    height: 76px;
 }
 
 .logo {

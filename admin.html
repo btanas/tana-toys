@@ -105,7 +105,7 @@
             background: white;
             border-bottom: 1px solid var(--border);
             padding: 0 32px;
-            height: 64px;
+            height: 76px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -711,25 +711,26 @@
     <header class="admin-header">
         <div style="display:flex;align-items:center;gap:14px">
             <a href="index.html" class="admin-header-logo">
-                <svg width="36" height="39" viewBox="0 0 200 215" xmlns="http://www.w3.org/2000/svg">
+                <svg width="72" height="65" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="lg-ah" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#ff6eb4"/><stop offset="40%" stop-color="#ffe566"/><stop offset="100%" stop-color="#5de0e6"/>
                         </linearGradient>
+                        <filter id="glow-ah"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                     </defs>
-                    <circle cx="38" cy="56" r="34" fill="url(#lg-ah)"/>
-                    <circle cx="162" cy="56" r="34" fill="url(#lg-ah)"/>
-                    <circle cx="100" cy="132" r="82" fill="url(#lg-ah)"/>
-                    <circle cx="38" cy="56" r="27" fill="#1560c0"/>
-                    <circle cx="162" cy="56" r="27" fill="#1560c0"/>
-                    <circle cx="100" cy="132" r="75" fill="#1560c0"/>
-                    <circle cx="38" cy="56" r="16" fill="#2a80e8" opacity="0.7"/>
-                    <circle cx="162" cy="56" r="16" fill="#2a80e8" opacity="0.7"/>
+                    <circle cx="36" cy="40" r="36" fill="url(#lg-ah)"/>
+                    <circle cx="164" cy="40" r="36" fill="url(#lg-ah)"/>
+                    <circle cx="100" cy="112" r="78" fill="url(#lg-ah)"/>
+                    <circle cx="36" cy="40" r="28" fill="#1560c0"/>
+                    <circle cx="164" cy="40" r="28" fill="#1560c0"/>
+                    <circle cx="100" cy="112" r="70" fill="#1560c0"/>
+                    <circle cx="36" cy="40" r="17" fill="#2a80e8" opacity="0.7"/>
+                    <circle cx="164" cy="40" r="17" fill="#2a80e8" opacity="0.7"/>
+                    <clipPath id="cp-ah"><circle cx="100" cy="112" r="70"/></clipPath>
+                    <rect x="30" y="42" width="140" height="14" fill="url(#lg-ah)" clip-path="url(#cp-ah)" opacity="0.9"/>
+                    <text x="100" y="102" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="50" fill="#ff6eb4" filter="url(#glow-ah)">Tana</text>
+                    <text x="100" y="148" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="50" fill="#ffe566" filter="url(#glow-ah)">toys</text>
                 </svg>
-                <div class="admin-header-logo-text">
-                    <span class="logo-tana">Tana</span>
-                    <span class="logo-toys">toys</span>
-                </div>
             </a>
             <span class="admin-badge">Адмін</span>
         </div>
