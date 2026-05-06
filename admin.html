@@ -1605,7 +1605,11 @@
         document.getElementById('fDescLv').value = '';
         document.getElementById('fDescRu').value = '';
         clearPhoto();
+        document.getElementById('fVideo').value = '';
         document.getElementById('fVideoUrl').value = '';
+        document.getElementById('videoPreview').innerHTML = '<div class="upload-placeholder"><span>🎬</span>Натисніть щоб завантажити відео</div>';
+        document.getElementById('clearVideoBtn').style.display = 'none';
+        document.getElementById('videoArea').onclick = () => document.getElementById('fVideo').click();
         videoFile = null;
         videoChanged = false;
         editingOriginalVideo = null;
