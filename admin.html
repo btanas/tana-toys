@@ -1824,56 +1824,69 @@
 
         const langs = ['et','en','lt','lv','ru'];
         const delay = ms => new Promise(r => setTimeout(r, ms));
+        const EMAIL = 'bm.tanas@gmail.com';
 
         async function translateOne(text, lang) {
             try {
                 const safe = text.length > 480 ? text.substring(0, 480) : text;
-                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(safe)}&langpair=uk|${lang}`);
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(safe)}&langpair=uk|${lang}&de=${EMAIL}`;
+                const res = await fetch(url);
                 const data = await res.json();
                 const txt = data?.responseData?.translatedText;
-                return (txt && data.responseStatus === 200) ? txt : null;
+                if (txt && data.responseStatus === 200 && txt !== safe) return txt;
+                return null;
             } catch { return null; }
         }
 
         const products = await loadProducts();
+        let noDesc = 0;
 
         for (let i = 0; i < products.length; i++) {
             const p = products[i];
-            btn.textContent = `⏳ ${i+1}/${products.length}...`;
 
-            // Translate names — завжди перезаписуємо всі мови
+            // Names
+            btn.textContent = `⏳ Назви ${i+1}/${products.length}`;
             const ukName = p.names?.uk;
             if (ukName) {
                 for (const lang of langs) {
-                    const result = await translateOne(ukName, lang);
-                    if (result) p.names[lang] = result;
-                    await delay(200);
+                    const r = await translateOne(ukName, lang);
+                    if (r) p.names[lang] = r;
+                    await delay(300);
                 }
             }
 
-            // Translate descs — завжди перезаписуємо всі мови
+            // Descs
+            btn.textContent = `⏳ Описи ${i+1}/${products.length}`;
             const ukDesc = p.descs?.uk;
             if (ukDesc) {
                 if (!p.descs) p.descs = {};
-                p.descs.uk = ukDesc;
                 for (const lang of langs) {
-                    const result = await translateOne(ukDesc, lang);
-                    if (result) p.descs[lang] = result;
-                    else p.descs[lang] = p.descs[lang] || '';
-                    await delay(200);
+                    const r = await translateOne(ukDesc, lang);
+                    if (r) p.descs[lang] = r;
+                    await delay(300);
                 }
+            } else {
+                noDesc++;
             }
         }
 
-        await saveProducts(products);
+        const saved = await saveProducts(products);
         btn.disabled = false;
-        btn.textContent = `✓ Готово! (${products.length})`;
-        btn.style.background = '#2d8a6a';
+        if (saved) {
+            btn.textContent = `✓ Готово!`;
+            btn.style.background = '#2d8a6a';
+            const msg = noDesc > 0
+                ? `✓ Перекладено! ${noDesc} товарів без опису UA — додайте описи в адміні.`
+                : `✓ Перекладено ${products.length} товарів! Оновіть магазин (F5)`;
+            showToast(msg, 'success');
+        } else {
+            btn.textContent = '⚠ Помилка';
+            btn.style.background = 'var(--danger)';
+        }
         setTimeout(() => {
             btn.textContent = '🌐 Перекласти всі';
             btn.style.background = 'var(--purple)';
-        }, 5000);
-        showToast(`✓ Перекладено ${products.length} товарів! Оновіть магазин (F5)`, 'success');
+        }, 6000);
     }
 
     // ===== DRAG SORT =====
