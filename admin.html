@@ -774,6 +774,12 @@
             </div>
         </div>
 
+        <!-- Translate actions -->
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+            <button id="retranslateNamesBtn" onclick="retranslateAllNames()" style="padding:9px 18px;background:#f0ebf8;color:#7b3fc4;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">🌐 Перекласти всі назви</button>
+            <button id="retranslateBtn" onclick="retranslateAllDescs()" style="padding:9px 18px;background:#f0ebf8;color:#7b3fc4;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">🌐 Перекласти всі описи</button>
+        </div>
+
         <!-- Main columns -->
         <div class="admin-cols">
 
@@ -1700,6 +1706,46 @@
         } catch(e) {
             showToast('Помилка імпорту: ' + e.message, 'error');
         }
+    }
+
+    // ===== RETRANSLATE ALL NAMES =====
+    async function retranslateAllNames() {
+        const btn = document.getElementById('retranslateNamesBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ Перекладаю...';
+
+        const products = await loadProducts();
+        const langs = ['et','en','lt','lv','ru'];
+        let done = 0;
+
+        for (const p of products) {
+            const ukText = p.names?.uk;
+            if (!ukText) { done++; continue; }
+
+            const newNames = { uk: ukText };
+            await Promise.all(langs.map(async lang => {
+                try {
+                    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(ukText)}&langpair=uk|${lang}`;
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    const translated = data?.responseData?.translatedText;
+                    newNames[lang] = (translated && data.responseStatus === 200) ? translated : (p.names?.[lang] || ukText);
+                } catch {
+                    newNames[lang] = p.names?.[lang] || ukText;
+                }
+            }));
+
+            p.names = newNames;
+            done++;
+            btn.textContent = `⏳ ${done}/${products.length}...`;
+        }
+
+        await saveProducts(products);
+        btn.disabled = false;
+        btn.textContent = '✓ Готово! Оновіть магазин (F5)';
+        btn.style.background = '#d4f0e8';
+        btn.style.color = '#2d8a6a';
+        showToast('Назви перекладено! Оновіть сторінку магазину (F5)', 'success');
     }
 
     // ===== RETRANSLATE ALL DESCRIPTIONS =====
