@@ -1216,15 +1216,14 @@
     // ===== AUTO TRANSLATE =====
     let translateTimer = null;
     let descTranslateTimer = null;
-    let pendingTranslations = 0;
+    let nameTranslating = false;
+    let descTranslating = false;
 
-    function setSubmitBtnTranslating(active) {
-        pendingTranslations += active ? 1 : -1;
-        if (pendingTranslations < 0) pendingTranslations = 0;
+    function updateSubmitBtn() {
         const btn = document.getElementById('formSubmitBtn');
         const lbl = document.getElementById('formSubmitLabel');
         if (!btn || !lbl) return;
-        if (pendingTranslations > 0) {
+        if (nameTranslating || descTranslating) {
             btn.disabled = true;
             lbl.textContent = '⏳ Перекладаю...';
         } else {
@@ -1233,16 +1232,21 @@
         }
     }
 
+    function setSubmitBtnTranslating(active) {
+        // kept for compatibility — not used directly anymore
+    }
+
     function scheduleTranslate() {
         clearTimeout(translateTimer);
         const text = document.getElementById('fNameUk').value.trim();
         if (!text) {
             ['fNameEt','fNameEn','fNameLt','fNameLv','fNameRu'].forEach(id => document.getElementById(id).value = '');
             setTranslateStatus('');
+            nameTranslating = false; updateSubmitBtn();
             return;
         }
         setTranslateStatus('⏳ Перекладаю...');
-        setSubmitBtnTranslating(true);
+        if (!nameTranslating) { nameTranslating = true; updateSubmitBtn(); }
         translateTimer = setTimeout(() => translateAll(text), 800);
     }
 
@@ -1269,7 +1273,7 @@
         } catch {
             setTranslateStatus('⚠ Помилка перекладу');
         } finally {
-            setSubmitBtnTranslating(false);
+            nameTranslating = false; updateSubmitBtn();
         }
     }
 
@@ -1284,10 +1288,11 @@
         if (!text) {
             ['fDescEt','fDescEn','fDescLt','fDescLv','fDescRu'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
             document.getElementById('descTranslateStatus').textContent = '';
+            descTranslating = false; updateSubmitBtn();
             return;
         }
         document.getElementById('descTranslateStatus').textContent = '⏳ Перекладаю...';
-        setSubmitBtnTranslating(true);
+        if (!descTranslating) { descTranslating = true; updateSubmitBtn(); }
         descTranslateTimer = setTimeout(() => translateDesc(text), 800);
     }
 
@@ -1316,7 +1321,7 @@
         } catch {
             document.getElementById('descTranslateStatus').textContent = '⚠ Помилка перекладу';
         } finally {
-            setSubmitBtnTranslating(false);
+            descTranslating = false; updateSubmitBtn();
         }
     }
 
@@ -1655,6 +1660,11 @@
         editingOriginalVideo = null;
         setStar(5);
         buildSwatches();
+        clearTimeout(translateTimer);
+        clearTimeout(descTranslateTimer);
+        nameTranslating = false;
+        descTranslating = false;
+        updateSubmitBtn();
     }
 
     // ===== EXPORT / IMPORT =====
