@@ -737,6 +737,9 @@
             <span class="admin-badge">Адмін</span>
         </div>
         <div class="header-right">
+            <button class="btn-store" id="batchTranslateBtn" onclick="batchTranslateAll()" style="background:var(--purple);color:white;border-color:var(--purple)">
+                🌐 Перекласти всі
+            </button>
             <button class="btn-store" onclick="openStore()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 Відкрити магазин
@@ -1812,6 +1815,71 @@
         btn.textContent = '✓ Готово! Оновіть магазин (F5)';
         btn.style.background = 'var(--green)';
         showToast('Переклади оновлено! Оновіть сторінку магазину (F5)', 'success');
+    }
+
+    // ===== BATCH TRANSLATE ALL PRODUCTS =====
+    async function batchTranslateAll() {
+        const btn = document.getElementById('batchTranslateBtn');
+        btn.disabled = true;
+
+        const langs = ['et','en','lt','lv','ru'];
+        const delay = ms => new Promise(r => setTimeout(r, ms));
+
+        async function translateOne(text, lang) {
+            try {
+                const safe = text.length > 480 ? text.substring(0, 480) : text;
+                const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(safe)}&langpair=uk|${lang}`);
+                const data = await res.json();
+                const t = data?.responseData?.translatedText;
+                return (t && data.responseStatus === 200) ? t : null;
+            } catch { return null; }
+        }
+
+        const products = await loadProducts();
+        let changed = 0;
+
+        for (let i = 0; i < products.length; i++) {
+            const p = products[i];
+            btn.textContent = `⏳ ${i+1}/${products.length}...`;
+            let modified = false;
+
+            // Translate names
+            const ukName = p.names?.uk;
+            if (ukName) {
+                for (const lang of langs) {
+                    if (!p.names[lang]) {
+                        const result = await translateOne(ukName, lang);
+                        if (result) { p.names[lang] = result; modified = true; }
+                        await delay(150);
+                    }
+                }
+            }
+
+            // Translate descs
+            const ukDesc = p.descs?.uk;
+            if (ukDesc) {
+                if (!p.descs) p.descs = { uk: ukDesc };
+                for (const lang of langs) {
+                    if (!p.descs[lang]) {
+                        const result = await translateOne(ukDesc, lang);
+                        if (result) { p.descs[lang] = result; modified = true; }
+                        await delay(150);
+                    }
+                }
+            }
+
+            if (modified) changed++;
+        }
+
+        await saveProducts(products);
+        btn.disabled = false;
+        btn.textContent = `✓ Перекладено (${changed})`;
+        btn.style.background = '#2d8a6a';
+        setTimeout(() => {
+            btn.textContent = '🌐 Перекласти всі';
+            btn.style.background = 'var(--purple)';
+        }, 4000);
+        showToast(`✓ Оновлено ${changed} товарів! Оновіть магазин (F5)`, 'success');
     }
 
     // ===== DRAG SORT =====
