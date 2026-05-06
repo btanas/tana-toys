@@ -1257,7 +1257,7 @@
         const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=uk&tl=${lang}&dt=t&q=${encodeURIComponent(text)}`;
         const res = await fetch(url);
         const data = await res.json();
-        return (data[0] || []).map(p => p[0]).filter(Boolean).join('') || null;
+        return (data[0] || []).filter(Array.isArray).map(p => p[0]).filter(Boolean).join('') || null;
     }
 
     async function translateAll(text) {
@@ -1822,16 +1822,10 @@
         const delay = ms => new Promise(r => setTimeout(r, ms));
 
         async function translateOne(text, lang) {
-            try {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=uk&tl=${lang}&dt=t&q=${encodeURIComponent(text)}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                // Google Translate response: [[["translated","original",...],...],...]
-                const parts = data[0];
-                if (!parts) return null;
-                const result = parts.map(p => p[0]).filter(Boolean).join('');
-                return result || null;
-            } catch { return null; }
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=uk&tl=${lang}&dt=t&q=${encodeURIComponent(text)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            return (data[0] || []).filter(Array.isArray).map(p => p[0]).filter(Boolean).join('') || null;
         }
 
         const products = await loadProducts();
