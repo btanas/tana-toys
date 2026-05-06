@@ -108,6 +108,28 @@ a { text-decoration: none; color: inherit; }
     height: 78px;
 }
 
+.header-socials {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.header-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: #888;
+    text-decoration: none;
+    transition: color 0.2s, background 0.2s;
+}
+.header-social-link:hover { color: var(--primary); background: var(--primary-light); }
+
+@media (max-width: 768px) { .header-socials { display: none; } }
+
 .logo {
     display: flex;
     align-items: center;
