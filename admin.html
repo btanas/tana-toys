@@ -1821,6 +1821,7 @@
     async function batchTranslateAll() {
         const btn = document.getElementById('batchTranslateBtn');
         btn.disabled = true;
+        btn.textContent = '⏳ Завантаження...';
 
         const langs = ['et','en','lt','lv','ru'];
         const delay = ms => new Promise(r => setTimeout(r, ms));
@@ -1833,13 +1834,21 @@
                 const res = await fetch(url);
                 const data = await res.json();
                 const txt = data?.responseData?.translatedText;
-                if (txt && data.responseStatus === 200 && txt !== safe) return txt;
-                return null;
+                return (txt && data.responseStatus === 200) ? txt : null;
             } catch { return null; }
         }
 
         const products = await loadProducts();
-        let noDesc = 0;
+
+        // Діагностика: які товари не мають укр. опису
+        const noDescProducts = products.filter(p => !p.descs?.uk);
+        if (noDescProducts.length > 0) {
+            const names = noDescProducts.map(p => `• ${p.names?.uk || 'id=' + p.id}`).join('\n');
+            const go = confirm(`${noDescProducts.length} товарів не мають українського опису:\n\n${names}\n\nВони будуть пропущені. Продовжити переклад решти?`);
+            if (!go) { btn.disabled = false; btn.textContent = '🌐 Перекласти всі'; return; }
+        }
+
+        let translatedDescs = 0;
 
         for (let i = 0; i < products.length; i++) {
             const p = products[i];
@@ -1862,11 +1871,9 @@
                 if (!p.descs) p.descs = {};
                 for (const lang of langs) {
                     const r = await translateOne(ukDesc, lang);
-                    if (r) p.descs[lang] = r;
+                    if (r) { p.descs[lang] = r; translatedDescs++; }
                     await delay(300);
                 }
-            } else {
-                noDesc++;
             }
         }
 
@@ -1875,12 +1882,9 @@
         if (saved) {
             btn.textContent = `✓ Готово!`;
             btn.style.background = '#2d8a6a';
-            const msg = noDesc > 0
-                ? `✓ Перекладено! ${noDesc} товарів без опису UA — додайте описи в адміні.`
-                : `✓ Перекладено ${products.length} товарів! Оновіть магазин (F5)`;
-            showToast(msg, 'success');
+            showToast(`✓ Готово! Описів перекладено: ${translatedDescs}. Оновіть магазин (F5)`, 'success');
         } else {
-            btn.textContent = '⚠ Помилка';
+            btn.textContent = '⚠ Помилка збереження';
             btn.style.background = 'var(--danger)';
         }
         setTimeout(() => {
