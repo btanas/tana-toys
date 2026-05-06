@@ -1830,56 +1830,50 @@
                 const safe = text.length > 480 ? text.substring(0, 480) : text;
                 const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(safe)}&langpair=uk|${lang}`);
                 const data = await res.json();
-                const t = data?.responseData?.translatedText;
-                return (t && data.responseStatus === 200) ? t : null;
+                const txt = data?.responseData?.translatedText;
+                return (txt && data.responseStatus === 200) ? txt : null;
             } catch { return null; }
         }
 
         const products = await loadProducts();
-        let changed = 0;
 
         for (let i = 0; i < products.length; i++) {
             const p = products[i];
             btn.textContent = `⏳ ${i+1}/${products.length}...`;
-            let modified = false;
 
-            // Translate names
+            // Translate names — завжди перезаписуємо всі мови
             const ukName = p.names?.uk;
             if (ukName) {
                 for (const lang of langs) {
-                    if (!p.names[lang]) {
-                        const result = await translateOne(ukName, lang);
-                        if (result) { p.names[lang] = result; modified = true; }
-                        await delay(150);
-                    }
+                    const result = await translateOne(ukName, lang);
+                    if (result) p.names[lang] = result;
+                    await delay(200);
                 }
             }
 
-            // Translate descs
+            // Translate descs — завжди перезаписуємо всі мови
             const ukDesc = p.descs?.uk;
             if (ukDesc) {
-                if (!p.descs) p.descs = { uk: ukDesc };
+                if (!p.descs) p.descs = {};
+                p.descs.uk = ukDesc;
                 for (const lang of langs) {
-                    if (!p.descs[lang]) {
-                        const result = await translateOne(ukDesc, lang);
-                        if (result) { p.descs[lang] = result; modified = true; }
-                        await delay(150);
-                    }
+                    const result = await translateOne(ukDesc, lang);
+                    if (result) p.descs[lang] = result;
+                    else p.descs[lang] = p.descs[lang] || '';
+                    await delay(200);
                 }
             }
-
-            if (modified) changed++;
         }
 
         await saveProducts(products);
         btn.disabled = false;
-        btn.textContent = `✓ Перекладено (${changed})`;
+        btn.textContent = `✓ Готово! (${products.length})`;
         btn.style.background = '#2d8a6a';
         setTimeout(() => {
             btn.textContent = '🌐 Перекласти всі';
             btn.style.background = 'var(--purple)';
-        }, 4000);
-        showToast(`✓ Оновлено ${changed} товарів! Оновіть магазин (F5)`, 'success');
+        }, 5000);
+        showToast(`✓ Перекладено ${products.length} товарів! Оновіть магазин (F5)`, 'success');
     }
 
     // ===== DRAG SORT =====
