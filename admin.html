@@ -673,19 +673,29 @@
 <div id="loginScreen">
     <div class="login-card">
         <div class="login-logo">
-            <svg width="54" height="54" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
-                <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
-                <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="3.8" fill="white"/>
-                <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
-                <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
-                <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
-                <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+            <svg width="100" height="108" viewBox="0 0 200 215" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="lg-al" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ff6eb4"/><stop offset="40%" stop-color="#ffe566"/><stop offset="100%" stop-color="#5de0e6"/>
+                    </linearGradient>
+                    <filter id="glow-al"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <circle cx="38" cy="56" r="34" fill="url(#lg-al)"/>
+                <circle cx="162" cy="56" r="34" fill="url(#lg-al)"/>
+                <circle cx="100" cy="132" r="82" fill="url(#lg-al)"/>
+                <circle cx="38" cy="56" r="27" fill="#1560c0"/>
+                <circle cx="162" cy="56" r="27" fill="#1560c0"/>
+                <circle cx="100" cy="132" r="75" fill="#1560c0"/>
+                <circle cx="38" cy="56" r="16" fill="#2a80e8" opacity="0.7"/>
+                <circle cx="162" cy="56" r="16" fill="#2a80e8" opacity="0.7"/>
+                <clipPath id="cp-al"><circle cx="100" cy="132" r="75"/></clipPath>
+                <rect x="20" y="57" width="160" height="16" fill="url(#lg-al)" clip-path="url(#cp-al)" opacity="0.85"/>
+                <text x="100" y="118" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="36" fill="#ff6eb4" filter="url(#glow-al)">Tana</text>
+                <text x="100" y="156" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="36" fill="#ffe566" filter="url(#glow-al)">toys</text>
+                <text x="70" y="183" text-anchor="middle" font-size="18" fill="#5de0e6">&#9733;</text>
+                <text x="100" y="183" text-anchor="middle" font-size="22" fill="#ffe566">&#9733;</text>
+                <text x="130" y="183" text-anchor="middle" font-size="18" fill="#ff6eb4">&#9733;</text>
             </svg>
-            <div class="login-logo-text">
-                <span class="login-logo-tana">Tana</span>
-                <span class="login-logo-toys">toys</span>
-            </div>
         </div>
         <h2>Вхід в адмін панель</h2>
         <p>Введіть пароль для управління товарами</p>
@@ -701,14 +711,20 @@
     <header class="admin-header">
         <div style="display:flex;align-items:center;gap:14px">
             <a href="index.html" class="admin-header-logo">
-                <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="26" cy="29" r="13" stroke="#A07EC8" stroke-width="4" fill="white"/>
-                    <circle cx="74" cy="29" r="13" stroke="#A07EC8" stroke-width="4" fill="white"/>
-                    <circle cx="50" cy="57" r="31" stroke="#A07EC8" stroke-width="4" fill="white"/>
-                    <circle cx="40" cy="51" r="3" fill="#A07EC8"/>
-                    <circle cx="60" cy="51" r="3" fill="#A07EC8"/>
-                    <ellipse cx="50" cy="61" rx="4" ry="3" fill="#A07EC8"/>
-                    <path d="M44 67 Q50 74 56 67" stroke="#A07EC8" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                <svg width="36" height="39" viewBox="0 0 200 215" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="lg-ah" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff6eb4"/><stop offset="40%" stop-color="#ffe566"/><stop offset="100%" stop-color="#5de0e6"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="38" cy="56" r="34" fill="url(#lg-ah)"/>
+                    <circle cx="162" cy="56" r="34" fill="url(#lg-ah)"/>
+                    <circle cx="100" cy="132" r="82" fill="url(#lg-ah)"/>
+                    <circle cx="38" cy="56" r="27" fill="#1560c0"/>
+                    <circle cx="162" cy="56" r="27" fill="#1560c0"/>
+                    <circle cx="100" cy="132" r="75" fill="#1560c0"/>
+                    <circle cx="38" cy="56" r="16" fill="#2a80e8" opacity="0.7"/>
+                    <circle cx="162" cy="56" r="16" fill="#2a80e8" opacity="0.7"/>
                 </svg>
                 <div class="admin-header-logo-text">
                     <span class="logo-tana">Tana</span>
