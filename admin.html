@@ -1221,6 +1221,23 @@
 
     // ===== AUTO TRANSLATE =====
     let translateTimer = null;
+    let descTranslateTimer = null;
+    let pendingTranslations = 0;
+
+    function setSubmitBtnTranslating(active) {
+        pendingTranslations += active ? 1 : -1;
+        if (pendingTranslations < 0) pendingTranslations = 0;
+        const btn = document.getElementById('formSubmitBtn');
+        const lbl = document.getElementById('formSubmitLabel');
+        if (!btn || !lbl) return;
+        if (pendingTranslations > 0) {
+            btn.disabled = true;
+            lbl.textContent = '⏳ Перекладаю...';
+        } else {
+            btn.disabled = false;
+            lbl.textContent = editingId ? 'Зберегти зміни' : 'Додати товар';
+        }
+    }
 
     function scheduleTranslate() {
         clearTimeout(translateTimer);
@@ -1231,6 +1248,7 @@
             return;
         }
         setTranslateStatus('⏳ Перекладаю...');
+        setSubmitBtnTranslating(true);
         translateTimer = setTimeout(() => translateAll(text), 800);
     }
 
@@ -1256,6 +1274,8 @@
             setTimeout(() => setTranslateStatus(''), 2000);
         } catch {
             setTranslateStatus('⚠ Помилка перекладу');
+        } finally {
+            setSubmitBtnTranslating(false);
         }
     }
 
@@ -1264,8 +1284,6 @@
     }
 
     // ===== AUTO TRANSLATE DESCRIPTION =====
-    let descTranslateTimer = null;
-
     function scheduleDescTranslate() {
         clearTimeout(descTranslateTimer);
         const text = document.getElementById('fDescUk').value.trim();
@@ -1275,6 +1293,7 @@
             return;
         }
         document.getElementById('descTranslateStatus').textContent = '⏳ Перекладаю...';
+        setSubmitBtnTranslating(true);
         descTranslateTimer = setTimeout(() => translateDesc(text), 800);
     }
 
@@ -1302,6 +1321,8 @@
             setTimeout(() => { document.getElementById('descTranslateStatus').textContent = ''; }, 2000);
         } catch {
             document.getElementById('descTranslateStatus').textContent = '⚠ Помилка перекладу';
+        } finally {
+            setSubmitBtnTranslating(false);
         }
     }
 
@@ -1396,23 +1417,6 @@
         const reviews = parseInt(document.getElementById('fReviews').value) || 0;
 
         const nameUk = document.getElementById('fNameUk').value.trim();
-
-        // If translations not done yet — run them now before saving
-        if (nameUk && !document.getElementById('fNameEt').value.trim()) {
-            clearTimeout(translateTimer);
-            const lbl = document.getElementById('formSubmitLabel');
-            const origLabel = lbl.textContent;
-            lbl.textContent = '⏳ Перекладаю...';
-            btn.disabled = true;
-            await translateAll(nameUk);
-            btn.disabled = false;
-            lbl.textContent = origLabel;
-        }
-        if (document.getElementById('fDescUk').value.trim() && !document.getElementById('fDescEt').value.trim()) {
-            clearTimeout(descTranslateTimer);
-            await translateDesc(document.getElementById('fDescUk').value.trim());
-        }
-
         const nameEt = document.getElementById('fNameEt').value.trim();
         const nameEn = document.getElementById('fNameEn').value.trim();
         const nameLt = document.getElementById('fNameLt').value.trim();
