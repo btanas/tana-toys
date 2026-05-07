@@ -58,6 +58,23 @@ const translations = {
         rev4_date: 'Рига · 2 місяці тому', rev5_date: 'Вільнюс · 1 місяць тому', rev6_date: 'Таллін · 3 тижні тому',
         rev1_name: 'Оксана М.', rev2_name: 'Ірина Б., вчитель', rev3_name: 'Василь Т.',
         rev4_name: 'Людмила К.', rev5_name: 'Тетяна Р.', rev6_name: 'Андрій С.',
+        co_title: 'Оформлення замовлення', co_contact: 'Контактні дані',
+        co_firstname: "Ім'я", co_lastname: 'Прізвище', co_phone: 'Телефон',
+        co_delivery_method: 'Спосіб доставки', co_courier_name: 'Кур\'єрська доставка',
+        co_city: 'Місто', co_city_ph: '— Оберіть місто —',
+        co_terminal: 'Назва пакетомату', co_terminal_ph: 'напр. Ülemiste keskus',
+        co_address_label: 'Адреса доставки', co_address_ph: 'Вулиця, будинок, квартира',
+        co_payment: 'Спосіб оплати', co_payment_name: 'Банківський переказ',
+        co_payment_note: 'Реквізити для оплати ви отримаєте після підтвердження замовлення',
+        co_comment: 'Коментар до замовлення', co_optional: '(необов\'язково)', co_comment_ph: 'Побажання, уточнення...',
+        co_submit: 'Підтвердити замовлення',
+        co_your_order: 'Ваше замовлення', co_goods: 'Товари', co_delivery_label: 'Доставка', co_total_label: 'Разом',
+        co_qty_unit: 'шт.',
+        co_success_title: 'Замовлення прийнято!',
+        co_success_sub: 'Ми надіслали підтвердження на вашу пошту. Будь ласка, здійсніть оплату.',
+        co_requisites: 'Реквізити для оплати', co_recipient_label: 'Отримувач', co_amount_label: 'Сума', co_purpose: 'Призначення платежу',
+        co_after_payment: 'Після отримання оплати ми відправимо ваше замовлення та надішлемо трекінг-номер.',
+        co_close: 'Закрити',
     },
     en: {
         nav_catalog: 'Catalog', nav_about: 'About us', nav_reviews: 'Reviews', nav_contacts: 'Contacts',
@@ -117,6 +134,23 @@ const translations = {
         rev4_date: 'Riga · 2 months ago', rev5_date: 'Vilnius · 1 month ago', rev6_date: 'Tallinn · 3 weeks ago',
         rev1_name: 'Oksana M.', rev2_name: 'Irina B., teacher', rev3_name: 'Vasyl T.',
         rev4_name: 'Liudmila K.', rev5_name: 'Tetiana R.', rev6_name: 'Andriy S.',
+        co_title: 'Checkout', co_contact: 'Contact details',
+        co_firstname: 'First name', co_lastname: 'Last name', co_phone: 'Phone',
+        co_delivery_method: 'Delivery method', co_courier_name: 'Courier delivery',
+        co_city: 'City', co_city_ph: '— Select city —',
+        co_terminal: 'Parcel terminal name', co_terminal_ph: 'e.g. Ülemiste centre',
+        co_address_label: 'Delivery address', co_address_ph: 'Street, house, apartment',
+        co_payment: 'Payment method', co_payment_name: 'Bank transfer',
+        co_payment_note: 'Payment details will be sent after order confirmation',
+        co_comment: 'Order comment', co_optional: '(optional)', co_comment_ph: 'Wishes, notes...',
+        co_submit: 'Confirm order',
+        co_your_order: 'Your order', co_goods: 'Products', co_delivery_label: 'Delivery', co_total_label: 'Total',
+        co_qty_unit: 'pcs',
+        co_success_title: 'Order received!',
+        co_success_sub: "We've sent a confirmation to your email. Please proceed with payment.",
+        co_requisites: 'Payment details', co_recipient_label: 'Recipient', co_amount_label: 'Amount', co_purpose: 'Payment purpose',
+        co_after_payment: 'After receiving payment, we will ship your order and send you a tracking number.',
+        co_close: 'Close',
     },
     et: {
         nav_catalog: 'Kataloog', nav_about: 'Meist', nav_reviews: 'Arvustused', nav_contacts: 'Kontaktid',
@@ -176,6 +210,23 @@ const translations = {
         rev4_date: 'Riia · 2 kuud tagasi', rev5_date: 'Vilnius · 1 kuu tagasi', rev6_date: 'Tallinn · 3 nädalat tagasi',
         rev1_name: 'Oksana M.', rev2_name: 'Irina B., õpetaja', rev3_name: 'Vassili T.',
         rev4_name: 'Ludmila K.', rev5_name: 'Tetjana R.', rev6_name: 'Andrei S.',
+        co_title: 'Tellimine', co_contact: 'Kontaktandmed',
+        co_firstname: 'Eesnimi', co_lastname: 'Perekonnanimi', co_phone: 'Telefon',
+        co_delivery_method: 'Tarneviis', co_courier_name: 'Kullerteenus (kulleriga)',
+        co_city: 'Linn', co_city_ph: '— Vali linn —',
+        co_terminal: 'Pakiautomaat', co_terminal_ph: 'nt. Ülemiste keskus',
+        co_address_label: 'Tarneaadress', co_address_ph: 'Tänav, maja, korter',
+        co_payment: 'Makseviis', co_payment_name: 'Pangaülekanne',
+        co_payment_note: 'Makseandmed saadetakse pärast tellimuse kinnitamist',
+        co_comment: 'Kommentaar', co_optional: '(valikuline)', co_comment_ph: 'Soovid, täpsustused...',
+        co_submit: 'Kinnita tellimus',
+        co_your_order: 'Teie tellimus', co_goods: 'Tooted', co_delivery_label: 'Tarne', co_total_label: 'Kokku',
+        co_qty_unit: 'tk',
+        co_success_title: 'Tellimus vastu võetud!',
+        co_success_sub: 'Saatsime kinnituse teie e-posti aadressile. Palun teostage makse.',
+        co_requisites: 'Makseandmed', co_recipient_label: 'Saaja', co_amount_label: 'Summa', co_purpose: 'Makse eesmärk',
+        co_after_payment: 'Pärast makse laekumist saadame teie tellimuse ja edastame jälgimisnumbri.',
+        co_close: 'Sulge',
     },
     lt: {
         nav_catalog: 'Katalogas', nav_about: 'Apie mus', nav_reviews: 'Atsiliepimai', nav_contacts: 'Kontaktai',
@@ -235,6 +286,23 @@ const translations = {
         rev4_date: 'Ryga · prieš 2 mėnesius', rev5_date: 'Vilnius · prieš 1 mėnesį', rev6_date: 'Talinas · prieš 3 savaites',
         rev1_name: 'Oksana M.', rev2_name: 'Irina B., mokytoja', rev3_name: 'Vasilis T.',
         rev4_name: 'Liudmila K.', rev5_name: 'Tetjana R.', rev6_name: 'Andrius S.',
+        co_title: 'Užsakymo įforminimas', co_contact: 'Kontaktiniai duomenys',
+        co_firstname: 'Vardas', co_lastname: 'Pavardė', co_phone: 'Telefonas',
+        co_delivery_method: 'Pristatymo būdas', co_courier_name: 'Kurjerio pristatymas',
+        co_city: 'Miestas', co_city_ph: '— Pasirinkite miestą —',
+        co_terminal: 'Paštomato pavadinimas', co_terminal_ph: 'pvz. Ülemiste centras',
+        co_address_label: 'Pristatymo adresas', co_address_ph: 'Gatvė, namas, butas',
+        co_payment: 'Mokėjimo būdas', co_payment_name: 'Banko pervedimas',
+        co_payment_note: 'Mokėjimo duomenys bus atsiųsti patvirtinus užsakymą',
+        co_comment: 'Komentaras', co_optional: '(nebūtina)', co_comment_ph: 'Pageidavimai, patikslinimai...',
+        co_submit: 'Patvirtinti užsakymą',
+        co_your_order: 'Jūsų užsakymas', co_goods: 'Prekės', co_delivery_label: 'Pristatymas', co_total_label: 'Viso',
+        co_qty_unit: 'vnt',
+        co_success_title: 'Užsakymas gautas!',
+        co_success_sub: 'Patvirtinimą išsiuntėme jūsų el. paštu. Prašome atlikti mokėjimą.',
+        co_requisites: 'Mokėjimo duomenys', co_recipient_label: 'Gavėjas', co_amount_label: 'Suma', co_purpose: 'Mokėjimo paskirtis',
+        co_after_payment: 'Gavę mokėjimą, išsiųsime jūsų užsakymą ir atsiųsime sekimo numerį.',
+        co_close: 'Uždaryti',
     },
     lv: {
         nav_catalog: 'Katalogs', nav_about: 'Par mums', nav_reviews: 'Atsauksmes', nav_contacts: 'Kontakti',
@@ -294,6 +362,23 @@ const translations = {
         rev4_date: 'Rīga · 2 mēnešus atpakaļ', rev5_date: 'Viļņa · 1 mēnesi atpakaļ', rev6_date: 'Tallina · 3 nedēļas atpakaļ',
         rev1_name: 'Oksana M.', rev2_name: 'Irina B., skolotāja', rev3_name: 'Vasils T.',
         rev4_name: 'Ludmila K.', rev5_name: 'Tetjana R.', rev6_name: 'Andrejs S.',
+        co_title: 'Pasūtījuma noformēšana', co_contact: 'Kontaktinformācija',
+        co_firstname: 'Vārds', co_lastname: 'Uzvārds', co_phone: 'Tālrunis',
+        co_delivery_method: 'Piegādes veids', co_courier_name: 'Kurjera piegāde',
+        co_city: 'Pilsēta', co_city_ph: '— Izvēlieties pilsētu —',
+        co_terminal: 'Pakomāta nosaukums', co_terminal_ph: 'piem. Ülemiste centrs',
+        co_address_label: 'Piegādes adrese', co_address_ph: 'Iela, māja, dzīvoklis',
+        co_payment: 'Maksājuma veids', co_payment_name: 'Bankas pārskaitījums',
+        co_payment_note: 'Maksājuma dati tiks nosūtīti pēc pasūtījuma apstiprināšanas',
+        co_comment: 'Komentārs', co_optional: '(neobligāti)', co_comment_ph: 'Vēlmes, precizējumi...',
+        co_submit: 'Apstiprināt pasūtījumu',
+        co_your_order: 'Jūsu pasūtījums', co_goods: 'Preces', co_delivery_label: 'Piegāde', co_total_label: 'Kopā',
+        co_qty_unit: 'gab',
+        co_success_title: 'Pasūtījums saņemts!',
+        co_success_sub: 'Nosūtījām apstiprinājumu uz jūsu e-pastu. Lūdzu, veiciet maksājumu.',
+        co_requisites: 'Maksājuma dati', co_recipient_label: 'Saņēmējs', co_amount_label: 'Summa', co_purpose: 'Maksājuma mērķis',
+        co_after_payment: 'Pēc maksājuma saņemšanas nosūtīsim jūsu pasūtījumu un izsekošanas numuru.',
+        co_close: 'Aizvērt',
     },
     ru: {
         nav_catalog: 'Каталог', nav_about: 'О нас', nav_reviews: 'Отзывы', nav_contacts: 'Контакты',
@@ -353,6 +438,23 @@ const translations = {
         rev4_date: 'Рига · 2 месяца назад', rev5_date: 'Вильнюс · 1 месяц назад', rev6_date: 'Таллин · 3 недели назад',
         rev1_name: 'Оксана М.', rev2_name: 'Ирина Б., учитель', rev3_name: 'Василий Т.',
         rev4_name: 'Людмила К.', rev5_name: 'Татьяна Р.', rev6_name: 'Андрей С.',
+        co_title: 'Оформление заказа', co_contact: 'Контактные данные',
+        co_firstname: 'Имя', co_lastname: 'Фамилия', co_phone: 'Телефон',
+        co_delivery_method: 'Способ доставки', co_courier_name: 'Курьерская доставка',
+        co_city: 'Город', co_city_ph: '— Выберите город —',
+        co_terminal: 'Название постамата', co_terminal_ph: 'напр. Ülemiste keskus',
+        co_address_label: 'Адрес доставки', co_address_ph: 'Улица, дом, квартира',
+        co_payment: 'Способ оплаты', co_payment_name: 'Банковский перевод',
+        co_payment_note: 'Реквизиты для оплаты вы получите после подтверждения заказа',
+        co_comment: 'Комментарий к заказу', co_optional: '(необязательно)', co_comment_ph: 'Пожелания, уточнения...',
+        co_submit: 'Подтвердить заказ',
+        co_your_order: 'Ваш заказ', co_goods: 'Товары', co_delivery_label: 'Доставка', co_total_label: 'Итого',
+        co_qty_unit: 'шт.',
+        co_success_title: 'Заказ принят!',
+        co_success_sub: 'Мы отправили подтверждение на вашу почту. Пожалуйста, произведите оплату.',
+        co_requisites: 'Реквизиты для оплаты', co_recipient_label: 'Получатель', co_amount_label: 'Сумма', co_purpose: 'Назначение платежа',
+        co_after_payment: 'После получения оплаты мы отправим ваш заказ и вышлем трекинг-номер.',
+        co_close: 'Закрыть',
     }
 };
 
@@ -815,7 +917,7 @@ function openCheckout() {
                 <div class="checkout-item-img" id="coimg-${item.id}" style="background:${item.bg}"></div>
                 <div>
                     <div class="checkout-item-name">${productName(item)}</div>
-                    <div class="checkout-item-qty">${item.qty} шт.</div>
+                    <div class="checkout-item-qty">${item.qty} ${(translations[currentLang] || {}).co_qty_unit || 'шт.'}</div>
                 </div>
                 <div class="checkout-item-price">€${(item.price * item.qty).toFixed(2)}</div>
             </div>`).join('');
@@ -851,7 +953,7 @@ window.updateDeliveryUI = function() {
         terminalField.style.display = '';
         addressField.style.display = 'none';
         const labels = { omniva: 'Omniva pakiautomaat', smartpost: 'SmartPOST pakiautomaat', dpd: 'DPD pakiautomaat' };
-        terminalLabel.textContent = labels[val] || 'Назва пакетомату';
+        terminalLabel.textContent = labels[val] || (translations[currentLang] || {}).co_terminal || 'Назва пакетомату';
     }
 };
 

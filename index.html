@@ -429,17 +429,17 @@
 
                 <!-- Left: form -->
                 <div class="checkout-form-side">
-                    <h2 class="checkout-title">Оформлення замовлення</h2>
+                    <h2 class="checkout-title" data-i18n="co_title">Оформлення замовлення</h2>
 
-                    <div class="checkout-section-label">Контактні дані</div>
+                    <div class="checkout-section-label" data-i18n="co_contact">Контактні дані</div>
                     <div class="checkout-row">
                         <div class="checkout-field">
-                            <label>Ім'я</label>
-                            <input type="text" id="coFirstName" placeholder="Ім'я" autocomplete="given-name">
+                            <label data-i18n="co_firstname">Ім'я</label>
+                            <input type="text" id="coFirstName" placeholder="Ім'я" autocomplete="given-name" data-i18n-placeholder="co_firstname">
                         </div>
                         <div class="checkout-field">
-                            <label>Прізвище</label>
-                            <input type="text" id="coLastName" placeholder="Прізвище" autocomplete="family-name">
+                            <label data-i18n="co_lastname">Прізвище</label>
+                            <input type="text" id="coLastName" placeholder="Прізвище" autocomplete="family-name" data-i18n-placeholder="co_lastname">
                         </div>
                     </div>
                     <div class="checkout-row">
@@ -448,12 +448,12 @@
                             <input type="email" id="coEmail" placeholder="email@example.com" autocomplete="email">
                         </div>
                         <div class="checkout-field">
-                            <label>Телефон</label>
+                            <label data-i18n="co_phone">Телефон</label>
                             <input type="tel" id="coPhone" placeholder="+372 5xxx xxxx" autocomplete="tel">
                         </div>
                     </div>
 
-                    <div class="checkout-section-label" style="margin-top:20px">Спосіб доставки</div>
+                    <div class="checkout-section-label" style="margin-top:20px" data-i18n="co_delivery_method">Спосіб доставки</div>
                     <div class="delivery-options">
                         <label class="delivery-option">
                             <input type="radio" name="delivery" value="omniva" checked onchange="updateDeliveryUI()">
@@ -483,7 +483,7 @@
                             <input type="radio" name="delivery" value="courier" onchange="updateDeliveryUI()">
                             <div class="delivery-option-box">
                                 <div class="delivery-logo courier-logo">🚚</div>
-                                <div class="delivery-name">Kullerteenus (kulleriga)</div>
+                                <div class="delivery-name" data-i18n="co_courier_name">Kullerteenus (kulleriga)</div>
                                 <div class="delivery-price">€4.90</div>
                             </div>
                         </label>
@@ -491,9 +491,9 @@
 
                     <div class="checkout-row" style="margin-top:16px">
                         <div class="checkout-field">
-                            <label>Місто</label>
+                            <label data-i18n="co_city">Місто</label>
                             <select id="coCity">
-                                <option value="">— Оберіть місто —</option>
+                                <option value="" data-i18n="co_city_ph">— Оберіть місто —</option>
                                 <option>Tallinn</option>
                                 <option>Tartu</option>
                                 <option>Narva</option>
@@ -509,50 +509,50 @@
                             </select>
                         </div>
                         <div class="checkout-field" id="terminalField">
-                            <label id="terminalLabel">Назва пакетомату</label>
-                            <input type="text" id="coTerminal" placeholder="напр. Ülemiste keskus">
+                            <label id="terminalLabel" data-i18n="co_terminal">Назва пакетомату</label>
+                            <input type="text" id="coTerminal" placeholder="напр. Ülemiste keskus" data-i18n-placeholder="co_terminal_ph">
                         </div>
                     </div>
 
                     <div class="checkout-field" id="addressField" style="display:none;margin-top:0">
-                        <label>Адреса доставки</label>
-                        <input type="text" id="coAddress" placeholder="Вулиця, будинок, квартира">
+                        <label data-i18n="co_address_label">Адреса доставки</label>
+                        <input type="text" id="coAddress" placeholder="Вулиця, будинок, квартира" data-i18n-placeholder="co_address_ph">
                     </div>
 
-                    <div class="checkout-section-label" style="margin-top:20px">Спосіб оплати</div>
+                    <div class="checkout-section-label" style="margin-top:20px" data-i18n="co_payment">Спосіб оплати</div>
                     <div class="payment-info-box">
                         <div class="payment-info-icon">🏦</div>
                         <div>
-                            <div class="payment-info-title">Pangaülekanne (банківський переказ)</div>
-                            <div class="payment-info-note">Реквізити для оплати ви отримаєте після підтвердження замовлення</div>
+                            <div class="payment-info-title" data-i18n="co_payment_name">Pangaülekanne (банківський переказ)</div>
+                            <div class="payment-info-note" data-i18n="co_payment_note">Реквізити для оплати ви отримаєте після підтвердження замовлення</div>
                         </div>
                     </div>
 
                     <div class="checkout-field" style="margin-top:12px">
-                        <label>Коментар до замовлення <span style="font-weight:400;color:#999">(необов'язково)</span></label>
-                        <textarea id="coComment" rows="2" placeholder="Побажання, уточнення..."></textarea>
+                        <label><span data-i18n="co_comment">Коментар до замовлення</span> <span style="font-weight:400;color:#999" data-i18n="co_optional">(необов'язково)</span></label>
+                        <textarea id="coComment" rows="2" placeholder="Побажання, уточнення..." data-i18n-placeholder="co_comment_ph"></textarea>
                     </div>
 
-                    <button class="checkout-submit-btn" id="checkoutSubmitBtn" onclick="submitOrder()">
+                    <button class="checkout-submit-btn" id="checkoutSubmitBtn" onclick="submitOrder()" data-i18n="co_submit">
                         Підтвердити замовлення
                     </button>
                 </div>
 
                 <!-- Right: order summary -->
                 <div class="checkout-summary-side">
-                    <div class="checkout-section-label">Ваше замовлення</div>
+                    <div class="checkout-section-label" data-i18n="co_your_order">Ваше замовлення</div>
                     <div id="checkoutItems" class="checkout-items"></div>
                     <div class="checkout-summary-totals">
                         <div class="checkout-summary-row">
-                            <span>Товари</span>
+                            <span data-i18n="co_goods">Товари</span>
                             <span id="coSubtotal">€0.00</span>
                         </div>
                         <div class="checkout-summary-row">
-                            <span>Доставка</span>
+                            <span data-i18n="co_delivery_label">Доставка</span>
                             <span id="coDeliveryPrice">€2.90</span>
                         </div>
                         <div class="checkout-summary-row checkout-summary-total">
-                            <span>Разом</span>
+                            <span data-i18n="co_total_label">Разом</span>
                             <span id="coTotal">€0.00</span>
                         </div>
                     </div>
@@ -563,12 +563,12 @@
             <!-- SUCCESS STEP -->
             <div id="checkoutSuccess" style="display:none;padding:48px 40px;text-align:center;max-width:560px;margin:0 auto">
                 <div style="width:72px;height:72px;background:#d4f0e8;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px">✓</div>
-                <h2 style="font-size:24px;font-weight:800;color:#1a1a2e;margin-bottom:8px">Замовлення прийнято!</h2>
-                <p style="color:#888;font-size:14px;margin-bottom:28px">Ми надіслали підтвердження на вашу пошту. Будь ласка, здійсніть оплату.</p>
+                <h2 style="font-size:24px;font-weight:800;color:#1a1a2e;margin-bottom:8px" data-i18n="co_success_title">Замовлення прийнято!</h2>
+                <p style="color:#888;font-size:14px;margin-bottom:28px" data-i18n="co_success_sub">Ми надіслали підтвердження на вашу пошту. Будь ласка, здійсніть оплату.</p>
 
                 <div style="background:#f4f2ef;border-radius:16px;padding:24px;text-align:left;margin-bottom:24px">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-                        <div style="font-size:12px;font-weight:800;color:#888;letter-spacing:0.08em;text-transform:uppercase">Реквізити для оплати</div>
+                        <div style="font-size:12px;font-weight:800;color:#888;letter-spacing:0.08em;text-transform:uppercase" data-i18n="co_requisites">Реквізити для оплати</div>
                         <div style="display:flex;align-items:center;gap:8px;background:white;border-radius:8px;padding:6px 12px">
                             <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/swedbank.svg" alt="Swedbank" width="20" height="20" style="filter:brightness(0) saturate(100%) invert(38%) sepia(99%) saturate(1200%) hue-rotate(1deg) brightness(105%)">
                             <span style="font-weight:800;font-size:13px;color:#FF5000">Swedbank</span>
@@ -580,23 +580,23 @@
                             <span style="font-weight:700;font-family:monospace;font-size:15px" id="successIBAN">EE00 0000 0000 0000 0000</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;font-size:14px">
-                            <span style="color:#888">Отримувач</span>
+                            <span style="color:#888" data-i18n="co_recipient_label">Отримувач</span>
                             <span style="font-weight:600" id="successRecipient">Ім'я Прізвище</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;font-size:14px">
-                            <span style="color:#888">Сума</span>
+                            <span style="color:#888" data-i18n="co_amount_label">Сума</span>
                             <span style="font-weight:800;color:#E8673A;font-size:16px" id="successAmount">€0.00</span>
                         </div>
                         <div style="height:1px;background:#e8e4df"></div>
                         <div style="display:flex;justify-content:space-between;font-size:14px">
-                            <span style="color:#888">Призначення платежу</span>
+                            <span style="color:#888" data-i18n="co_purpose">Призначення платежу</span>
                             <span style="font-weight:700" id="successOrderNum">#TT-0000</span>
                         </div>
                     </div>
                 </div>
 
-                <p style="font-size:13px;color:#aaa;margin-bottom:28px">Після отримання оплати ми відправимо ваше замовлення та надішлемо трекінг-номер.</p>
-                <button onclick="closeCheckout()" style="padding:14px 40px;background:#E8673A;color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer">Закрити</button>
+                <p style="font-size:13px;color:#aaa;margin-bottom:28px" data-i18n="co_after_payment">Після отримання оплати ми відправимо ваше замовлення та надішлемо трекінг-номер.</p>
+                <button onclick="closeCheckout()" style="padding:14px 40px;background:#E8673A;color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer" data-i18n="co_close">Закрити</button>
             </div>
 
         </div>
