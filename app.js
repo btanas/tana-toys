@@ -936,6 +936,9 @@ function openCheckout() {
         r.addEventListener('change', renderSummary)
     );
 
+    // Перекладаємо кнопку на поточну мову при відкритті
+    setLanguage(currentLang);
+
     document.getElementById('checkoutOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
 
