@@ -1067,22 +1067,42 @@ window.submitOrder = async function() {
 
     // Підтвердження покупцю — на мові покупця
     try {
-        const customerEmail = buildCustomerEmail(currentLang, {
-            name:           `${firstName} ${lastName}`,
-            orderNum,
-            items:          itemsText,
-            deliveryMethod: deliveryLabels[delivery],
-            city,
-            location:       delivery === 'courier' ? address : (terminal || '—'),
-            deliveryCost:   `€${deliveryCost.toFixed(2)}`,
-            total:          `€${total.toFixed(2)}`,
-            iban:           BANK_IBAN,
-            bankRecipient:  BANK_RECIPIENT,
-        });
+        const eT = {
+            uk: { subject:`Ваше замовлення ${orderNum} прийнято`, greeting:'Шановний(а)', thanks:'Дякуємо за ваше замовлення! Ми обробимо його після отримання оплати.', order_num:'Номер замовлення', items:'Товари', delivery:'Доставка', terminal:'Пакетомат / Адреса', delivery_cost:'Вартість доставки', total:'Разом до сплати', payment:'Оплата банківським переказом', recipient:'Отримувач', purpose:'Призначення', after_payment:'Після отримання оплати ми підготуємо ваше замовлення та повідомимо про відправку.', questions:'Питання? Напишіть нам:', closing:'З повагою, команда Tana Toys' },
+            en: { subject:`Your order ${orderNum} confirmed`, greeting:'Dear', thanks:'Thank you for your order! We will process it after receiving payment.', order_num:'Order number', items:'Order items', delivery:'Delivery', terminal:'Terminal / Address', delivery_cost:'Delivery cost', total:'Total', payment:'Bank transfer', recipient:'Recipient', purpose:'Purpose', after_payment:'After receiving payment, we will prepare your order and notify you about shipping.', questions:'Questions? Contact us:', closing:'Best regards, Tana Toys Team' },
+            et: { subject:`Tellimus ${orderNum} kinnitatud`, greeting:'Lugupeetud', thanks:'Täname teid tellimuse eest! Töötleme seda pärast makse laekumist.', order_num:'Tellimuse number', items:'Tooted', delivery:'Tarne', terminal:'Pakiautomaat / Aadress', delivery_cost:'Tarne hind', total:'Kokku', payment:'Pangaülekanne', recipient:'Saaja', purpose:'Eesmärk', after_payment:'Pärast makse laekumist valmistame teie tellimuse ette ja teavitame teid saatmisest.', questions:'Küsimused? Kirjutage meile:', closing:'Lugupidamisega, Tana Toys meeskond' },
+            lt: { subject:`Užsakymas ${orderNum} patvirtintas`, greeting:'Gerbiamas(-a)', thanks:'Dėkojame už jūsų užsakymą! Apdorosime jį gavę apmokėjimą.', order_num:'Užsakymo numeris', items:'Prekės', delivery:'Pristatymas', terminal:'Paštomatas / Adresas', delivery_cost:'Pristatymo kaina', total:'Viso', payment:'Banko pervedimas', recipient:'Gavėjas', purpose:'Paskirtis', after_payment:'Gavę mokėjimą, išsiųsime jūsų užsakymą ir informuosime apie išsiuntimą.', questions:'Klausimai? Rašykite mums:', closing:'Pagarbiai, Tana Toys komanda' },
+            lv: { subject:`Pasūtījums ${orderNum} apstiprināts`, greeting:'Cienījamais(-ā)', thanks:'Paldies par jūsu pasūtījumu! Apstrādāsim to pēc maksājuma saņemšanas.', order_num:'Pasūtījuma numurs', items:'Preces', delivery:'Piegāde', terminal:'Pakomāts / Adrese', delivery_cost:'Piegādes izmaksas', total:'Kopā', payment:'Bankas pārskaitījums', recipient:'Saņēmējs', purpose:'Mērķis', after_payment:'Pēc maksājuma saņemšanas nosūtīsim jūsu pasūtījumu un izsekošanas numuru.', questions:'Jautājumi? Rakstiet mums:', closing:'Ar cieņu, Tana Toys komanda' },
+            ru: { subject:`Заказ ${orderNum} принят`, greeting:'Уважаемый(-ая)', thanks:'Спасибо за ваш заказ! Мы обработаем его после получения оплаты.', order_num:'Номер заказа', items:'Товары', delivery:'Доставка', terminal:'Постамат / Адрес', delivery_cost:'Стоимость доставки', total:'Итого', payment:'Оплата банковским переводом', recipient:'Получатель', purpose:'Назначение', after_payment:'После получения оплаты мы подготовим ваш заказ и сообщим об отправке.', questions:'Вопросы? Напишите нам:', closing:'С уважением, команда Tana Toys' },
+        };
+        const el = eT[currentLang] || eT.uk;
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CUSTOMER_TEMPLATE_ID, {
-            to_email:      email,
-            email_subject: customerEmail.subject,
-            message_html:  customerEmail.html,
+            to_email:            email,
+            email_subject:       el.subject,
+            customer_name:       `${firstName} ${lastName}`,
+            order_number:        orderNum,
+            items:               itemsText,
+            delivery_method:     deliveryLabels[delivery],
+            city,
+            location:            delivery === 'courier' ? address : (terminal || '—'),
+            delivery_cost:       `€${deliveryCost.toFixed(2)}`,
+            total:               `€${total.toFixed(2)}`,
+            iban:                BANK_IBAN,
+            bank_recipient:      BANK_RECIPIENT,
+            greeting_hello:      el.greeting,
+            label_thanks:        el.thanks,
+            label_order_num:     el.order_num,
+            label_items:         el.items,
+            label_delivery:      el.delivery,
+            label_terminal:      el.terminal,
+            label_delivery_cost: el.delivery_cost,
+            label_total:         el.total,
+            label_payment:       el.payment,
+            label_recipient:     el.recipient,
+            label_purpose:       el.purpose,
+            label_after_payment: el.after_payment,
+            label_questions:     el.questions,
+            label_closing:       el.closing,
         });
     } catch(e) {
         console.warn('Customer confirmation email failed:', e);
