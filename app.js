@@ -56,6 +56,8 @@ const translations = {
         rev6_text: '"Подарували на день народження племіннику 5 років. Він і батьки в захваті. Гра розвиває логіку і дрібну моторику одночасно. Якість на рівні — нічого не злипається, деталі підходять ідеально."',
         rev1_date: 'Таллін · 2 тижні тому', rev2_date: 'Нарва · 1 місяць тому', rev3_date: 'Харків · 3 тижні тому',
         rev4_date: 'Рига · 2 місяці тому', rev5_date: 'Вільнюс · 1 місяць тому', rev6_date: 'Таллін · 3 тижні тому',
+        rev1_name: 'Оксана М.', rev2_name: 'Ірина Б., вчитель', rev3_name: 'Василь Т.',
+        rev4_name: 'Людмила К.', rev5_name: 'Тетяна Р.', rev6_name: 'Андрій С.',
     },
     en: {
         nav_catalog: 'Catalog', nav_about: 'About us', nav_reviews: 'Reviews', nav_contacts: 'Contacts',
@@ -113,6 +115,8 @@ const translations = {
         rev6_text: '"We gave it as a birthday gift to our 5-year-old nephew. He and his parents are delighted. The game develops logic and fine motor skills simultaneously. Excellent quality — nothing sticks, parts fit perfectly."',
         rev1_date: 'Tallinn · 2 weeks ago', rev2_date: 'Narva · 1 month ago', rev3_date: 'Kharkiv · 3 weeks ago',
         rev4_date: 'Riga · 2 months ago', rev5_date: 'Vilnius · 1 month ago', rev6_date: 'Tallinn · 3 weeks ago',
+        rev1_name: 'Oksana M.', rev2_name: 'Irina B., teacher', rev3_name: 'Vasyl T.',
+        rev4_name: 'Liudmila K.', rev5_name: 'Tetiana R.', rev6_name: 'Andriy S.',
     },
     et: {
         nav_catalog: 'Kataloog', nav_about: 'Meist', nav_reviews: 'Arvustused', nav_contacts: 'Kontaktid',
@@ -170,6 +174,8 @@ const translations = {
         rev6_text: '"Kinkisime sünnipäevaks vennapojale 5 aastat. Tema ja vanemad on vaimustuses. Mäng arendab loogikat ja peenmotoorikat samaaegselt. Kvaliteet on kõrgtasemel — miski ei kleepu, detailid sobivad ideaalselt."',
         rev1_date: 'Tallinn · 2 nädalat tagasi', rev2_date: 'Narva · 1 kuu tagasi', rev3_date: 'Harkiv · 3 nädalat tagasi',
         rev4_date: 'Riia · 2 kuud tagasi', rev5_date: 'Vilnius · 1 kuu tagasi', rev6_date: 'Tallinn · 3 nädalat tagasi',
+        rev1_name: 'Oksana M.', rev2_name: 'Irina B., õpetaja', rev3_name: 'Vassili T.',
+        rev4_name: 'Ludmila K.', rev5_name: 'Tetjana R.', rev6_name: 'Andrei S.',
     },
     lt: {
         nav_catalog: 'Katalogas', nav_about: 'Apie mus', nav_reviews: 'Atsiliepimai', nav_contacts: 'Kontaktai',
@@ -227,6 +233,8 @@ const translations = {
         rev6_text: '"Padovanojome gimtadienio proga sūnėnui 5 metų. Jis ir tėvai džiaugiasi. Žaidimas ugdo logiką ir smulkiąją motoriką vienu metu. Kokybė aukšto lygio — niekas nelimpa, detalės tinka idealiai."',
         rev1_date: 'Talinas · prieš 2 savaites', rev2_date: 'Narva · prieš 1 mėnesį', rev3_date: 'Charkovas · prieš 3 savaites',
         rev4_date: 'Ryga · prieš 2 mėnesius', rev5_date: 'Vilnius · prieš 1 mėnesį', rev6_date: 'Talinas · prieš 3 savaites',
+        rev1_name: 'Oksana M.', rev2_name: 'Irina B., mokytoja', rev3_name: 'Vasilis T.',
+        rev4_name: 'Liudmila K.', rev5_name: 'Tetjana R.', rev6_name: 'Andrius S.',
     },
     lv: {
         nav_catalog: 'Katalogs', nav_about: 'Par mums', nav_reviews: 'Atsauksmes', nav_contacts: 'Kontakti',
@@ -284,6 +292,8 @@ const translations = {
         rev6_text: '"Uzdāvinājām dzimšanas dienā brāļadēlam 5 gadi. Viņš un vecāki ir sajūsmā. Spēle attīsta loģiku un smalko motoriku vienlaicīgi. Kvalitāte augstā līmenī — nekas nelīp, detaļas der perfekti."',
         rev1_date: 'Tallina · 2 nedēļas atpakaļ', rev2_date: 'Narva · 1 mēnesi atpakaļ', rev3_date: 'Harkiva · 3 nedēļas atpakaļ',
         rev4_date: 'Rīga · 2 mēnešus atpakaļ', rev5_date: 'Viļņa · 1 mēnesi atpakaļ', rev6_date: 'Tallina · 3 nedēļas atpakaļ',
+        rev1_name: 'Oksana M.', rev2_name: 'Irina B., skolotāja', rev3_name: 'Vasils T.',
+        rev4_name: 'Ludmila K.', rev5_name: 'Tetjana R.', rev6_name: 'Andrejs S.',
     },
     ru: {
         nav_catalog: 'Каталог', nav_about: 'О нас', nav_reviews: 'Отзывы', nav_contacts: 'Контакты',
@@ -341,6 +351,8 @@ const translations = {
         rev6_text: '"Подарили на день рождения племяннику 5 лет. Он и родители в восторге. Игра развивает логику и мелкую моторику одновременно. Качество на уровне — ничего не слипается, детали подходят идеально."',
         rev1_date: 'Таллин · 2 недели назад', rev2_date: 'Нарва · 1 месяц назад', rev3_date: 'Харьков · 3 недели назад',
         rev4_date: 'Рига · 2 месяца назад', rev5_date: 'Вильнюс · 1 месяц назад', rev6_date: 'Таллин · 3 недели назад',
+        rev1_name: 'Оксана М.', rev2_name: 'Ирина Б., учитель', rev3_name: 'Василий Т.',
+        rev4_name: 'Людмила К.', rev5_name: 'Татьяна Р.', rev6_name: 'Андрей С.',
     }
 };
 
