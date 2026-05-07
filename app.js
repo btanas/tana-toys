@@ -1141,6 +1141,29 @@ window.submitOrder = async function() {
         console.warn('Customer confirmation email failed:', e);
     }
 
+    // Зберегти замовлення у Firestore
+    try {
+        await getDB().collection('orders').doc(orderNum).set({
+            orderNum,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            name: `${firstName} ${lastName}`,
+            email,
+            phone,
+            delivery,
+            city: city || '',
+            location: delivery === 'courier' ? address : (terminal || ''),
+            items: cart.map(i => ({ id: i.id, name: productName(i), qty: i.qty, price: i.price })),
+            subtotal,
+            deliveryCost,
+            total,
+            comment: comment || '',
+            lang: currentLang,
+            status: 'new'
+        });
+    } catch(e) {
+        console.warn('Order save failed:', e);
+    }
+
     // Показати success екран
     document.getElementById('checkoutSuccess').style.display = 'block';
     document.getElementById('checkoutInner').style.display = 'none';
