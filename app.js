@@ -967,6 +967,20 @@ const BANK_RECIPIENT = 'Borys Tanasiichuk';
 
 try { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); } catch(e) {}
 
+function resizeImageForEmail(src, w, h) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            const c = document.createElement('canvas');
+            c.width = w; c.height = h;
+            c.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(c.toDataURL('image/jpeg', 0.75));
+        };
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
 function buildCustomerEmail(lang, d) {
     const t = {
         uk: { subject:`Ваше замовлення ${d.orderNum} прийнято`,greeting:'Шановний(а)',thanks:'Дякуємо за ваше замовлення! Ми обробимо його після отримання оплати.',order_num:'Номер замовлення',items_title:'Товари',delivery:'Доставка',city:'Місто',terminal:'Пакетомат / Адреса',delivery_cost:'Вартість доставки',total:'Разом до сплати',payment_title:'Оплата банківським переказом',recipient:'Отримувач',purpose:'Призначення',purpose_val:`Замовлення ${d.orderNum}`,after_payment:'Після отримання оплати ми підготуємо ваше замовлення та повідомимо про відправку.',questions:'Питання?',closing:'З повагою, команда Tana Toys' },
@@ -1040,6 +1054,22 @@ window.submitOrder = async function() {
     const location = delivery === 'courier' ? `Адреса: ${address}` : `Пакетомат: ${terminal || '—'}`;
     const itemsText = cart.map(i => `${productName(i)} x${i.qty} — €${(i.price*i.qty).toFixed(2)}`).join('\n');
 
+    // Фото товарів для листа покупцю (стиснуті до 64×64)
+    const itemPhotos = await Promise.all(cart.map(async item => {
+        const img = await loadImage(item.id);
+        if (!img) return null;
+        try { return await resizeImageForEmail(img, 64, 64); } catch(e) { return null; }
+    }));
+    const qtyUnit = (translations[currentLang] || {}).co_qty_unit || 'шт.';
+    let itemsWithPhotos = '';
+    cart.forEach((item, i) => {
+        const imgSrc = itemPhotos[i];
+        const imgCell = imgSrc
+            ? `<img src="${imgSrc}" width="64" height="64" style="border-radius:8px;object-fit:cover;display:block">`
+            : `<div style="width:64px;height:64px;background:${item.bg};border-radius:8px"></div>`;
+        itemsWithPhotos += `<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:10px"><tr><td width="74" valign="top">${imgCell}</td><td valign="middle" style="padding-left:12px;font-size:14px"><div style="font-weight:700;color:#1a1a2e">${productName(item)}</div><div style="color:#888;margin-top:4px">${item.qty} ${qtyUnit} — <strong style="color:#E8673A">€${(item.price*item.qty).toFixed(2)}</strong></div></td></tr></table>`;
+    });
+
     const btn = document.getElementById('checkoutSubmitBtn');
     btn.disabled = true;
     btn.textContent = { uk:'Надсилаємо...', en:'Sending...', et:'Saadan...', lt:'Siunčiame...', lv:'Sūtu...', ru:'Отправляем...' }[currentLang] || 'Надсилаємо...';
@@ -1082,6 +1112,7 @@ window.submitOrder = async function() {
             customer_name:       `${firstName} ${lastName}`,
             order_number:        orderNum,
             items:               itemsText,
+            items_with_photos:   itemsWithPhotos,
             delivery_method:     deliveryLabels[delivery],
             city,
             location:            delivery === 'courier' ? address : (terminal || '—'),
