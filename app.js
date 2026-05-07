@@ -967,6 +967,50 @@ const BANK_RECIPIENT = 'Borys Tanasiichuk';
 
 try { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); } catch(e) {}
 
+function buildCustomerEmail(lang, d) {
+    const t = {
+        uk: { subject:`Ваше замовлення ${d.orderNum} прийнято`,greeting:'Шановний(а)',thanks:'Дякуємо за ваше замовлення! Ми обробимо його після отримання оплати.',order_num:'Номер замовлення',items_title:'Товари',delivery:'Доставка',city:'Місто',terminal:'Пакетомат / Адреса',delivery_cost:'Вартість доставки',total:'Разом до сплати',payment_title:'Оплата банківським переказом',recipient:'Отримувач',purpose:'Призначення',purpose_val:`Замовлення ${d.orderNum}`,after_payment:'Після отримання оплати ми підготуємо ваше замовлення та повідомимо про відправку.',questions:'Питання?',closing:'З повагою, команда Tana Toys' },
+        en: { subject:`Your order ${d.orderNum} is confirmed`,greeting:'Dear',thanks:'Thank you for your order! We will process it as soon as we receive your payment.',order_num:'Order number',items_title:'Order items',delivery:'Delivery',city:'City',terminal:'Terminal / Address',delivery_cost:'Delivery cost',total:'Total',payment_title:'Bank transfer payment',recipient:'Recipient',purpose:'Payment purpose',purpose_val:`Order ${d.orderNum}`,after_payment:'After receiving your payment, we will prepare your order and notify you about shipping.',questions:'Questions?',closing:'Best regards, Tana Toys Team' },
+        et: { subject:`Teie tellimus ${d.orderNum} on kinnitatud`,greeting:'Lugupeetud',thanks:'Täname teid tellimuse eest! Töötleme seda pärast makse laekumist.',order_num:'Tellimuse number',items_title:'Tellitud tooted',delivery:'Tarne',city:'Linn',terminal:'Pakiautomaat / Aadress',delivery_cost:'Tarne hind',total:'Kokku',payment_title:'Pangaülekanne',recipient:'Saaja',purpose:'Makse eesmärk',purpose_val:`Tellimus ${d.orderNum}`,after_payment:'Pärast makse laekumist valmistame teie tellimuse ette ja teavitame teid saatmisest.',questions:'Küsimused?',closing:'Lugupidamisega, Tana Toys meeskond' },
+        lt: { subject:`Jūsų užsakymas ${d.orderNum} patvirtintas`,greeting:'Gerbiamas(-a)',thanks:'Dėkojame už jūsų užsakymą! Apdorosime jį gavę apmokėjimą.',order_num:'Užsakymo numeris',items_title:'Užsakytos prekės',delivery:'Pristatymas',city:'Miestas',terminal:'Paštomatas / Adresas',delivery_cost:'Pristatymo kaina',total:'Viso',payment_title:'Mokėjimas banko pervedimu',recipient:'Gavėjas',purpose:'Mokėjimo paskirtis',purpose_val:`Užsakymas ${d.orderNum}`,after_payment:'Gavę mokėjimą, paruošime jūsų užsakymą ir informuosime apie išsiuntimą.',questions:'Klausimai?',closing:'Pagarbiai, Tana Toys komanda' },
+        lv: { subject:`Jūsu pasūtījums ${d.orderNum} ir apstiprināts`,greeting:'Cienījamais(-ā)',thanks:'Paldies par jūsu pasūtījumu! Apstrādāsim to pēc maksājuma saņemšanas.',order_num:'Pasūtījuma numurs',items_title:'Pasūtītās preces',delivery:'Piegāde',city:'Pilsēta',terminal:'Pakomāts / Adrese',delivery_cost:'Piegādes izmaksas',total:'Kopā',payment_title:'Bankas pārskaitījums',recipient:'Saņēmējs',purpose:'Maksājuma mērķis',purpose_val:`Pasūtījums ${d.orderNum}`,after_payment:'Pēc maksājuma saņemšanas sagatavosim jūsu pasūtījumu un informēsim par nosūtīšanu.',questions:'Jautājumi?',closing:'Ar cieņu, Tana Toys komanda' },
+        ru: { subject:`Ваш заказ ${d.orderNum} принят`,greeting:'Уважаемый(-ая)',thanks:'Спасибо за ваш заказ! Мы обработаем его после получения оплаты.',order_num:'Номер заказа',items_title:'Товары',delivery:'Доставка',city:'Город',terminal:'Постамат / Адрес',delivery_cost:'Стоимость доставки',total:'Итого',payment_title:'Оплата банковским переводом',recipient:'Получатель',purpose:'Назначение платежа',purpose_val:`Заказ ${d.orderNum}`,after_payment:'После получения оплаты мы подготовим ваш заказ и сообщим об отправке.',questions:'Вопросы?',closing:'С уважением, команда Tana Toys' },
+    };
+    const e = t[lang] || t.uk;
+    const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#1a1a2e">
+<div style="background:linear-gradient(135deg,#6e3fa3,#a07ec8);padding:24px 32px;border-radius:12px 12px 0 0">
+  <div style="font-size:22px;font-weight:900;color:#fff">Tana Toys</div>
+  <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:4px">${e.subject}</div>
+</div>
+<div style="background:#fff;padding:28px 32px;border:1px solid #e8e4df;border-top:none">
+  <p style="font-size:17px;margin:0 0 6px">${e.greeting}, <strong>${d.name}</strong>!</p>
+  <p style="color:#666;margin:0 0 24px;font-size:14px">${e.thanks}</p>
+  <div style="background:#f7f4ff;border-radius:10px;padding:16px 20px;margin-bottom:18px">
+    <div style="font-size:11px;font-weight:800;color:#6e3fa3;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">${e.order_num}: ${d.orderNum}</div>
+    <div style="font-size:12px;font-weight:700;color:#999;margin-bottom:6px">${e.items_title}</div>
+    <div style="font-size:13px;color:#333;white-space:pre-wrap;margin-bottom:12px">${d.items}</div>
+    <div style="border-top:1px solid #e0d9f5;padding-top:10px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="color:#888">${e.delivery}</span><span>${d.deliveryMethod}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="color:#888">${e.city}</span><span>${d.city}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="color:#888">${e.terminal}</span><span>${d.location}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="color:#888">${e.delivery_cost}</span><span>${d.deliveryCost}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;margin-top:6px"><span>${e.total}</span><span style="color:#E8673A">${d.total}</span></div>
+    </div>
+  </div>
+  <div style="background:#f4f2ef;border-radius:10px;padding:16px 20px;margin-bottom:18px">
+    <div style="font-size:11px;font-weight:800;color:#888;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">${e.payment_title}</div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="color:#888">IBAN</span><span style="font-weight:700;font-family:monospace">${d.iban}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span style="color:#888">${e.recipient}</span><span style="font-weight:600">${d.bankRecipient}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#888">${e.purpose}</span><span style="font-weight:700">${e.purpose_val}</span></div>
+  </div>
+  <p style="color:#999;font-size:13px;margin:0 0 6px">${e.after_payment}</p>
+  <p style="color:#999;font-size:13px;margin:0">${e.questions} <a href="mailto:bm.tanas@gmail.com" style="color:#6e3fa3">bm.tanas@gmail.com</a></p>
+</div>
+<div style="background:#f7f4ff;padding:14px 32px;border-radius:0 0 12px 12px;text-align:center;font-size:12px;color:#888">${e.closing}</div>
+</div>`;
+    return { subject: e.subject, html };
+}
+
 window.submitOrder = async function() {
     const firstName = document.getElementById('coFirstName').value.trim();
     const lastName  = document.getElementById('coLastName').value.trim();
@@ -998,7 +1042,7 @@ window.submitOrder = async function() {
 
     const btn = document.getElementById('checkoutSubmitBtn');
     btn.disabled = true;
-    btn.textContent = 'Надсилаємо...';
+    btn.textContent = { uk:'Надсилаємо...', en:'Sending...', et:'Saadan...', lt:'Siunčiame...', lv:'Sūtu...', ru:'Отправляем...' }[currentLang] || 'Надсилаємо...';
 
     try {
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
@@ -1016,25 +1060,29 @@ window.submitOrder = async function() {
         });
     } catch(e) {
         btn.disabled = false;
-        btn.textContent = 'Підтвердити замовлення';
+        btn.textContent = (translations[currentLang] || {}).co_submit || 'Підтвердити замовлення';
         showToast('Помилка відправки. Напишіть нам на tanatoys.info@gmail.com', 'error');
         return;
     }
 
-    // Підтвердження покупцю
+    // Підтвердження покупцю — на мові покупця
     try {
+        const customerEmail = buildCustomerEmail(currentLang, {
+            name:           `${firstName} ${lastName}`,
+            orderNum,
+            items:          itemsText,
+            deliveryMethod: deliveryLabels[delivery],
+            city,
+            location:       delivery === 'courier' ? address : (terminal || '—'),
+            deliveryCost:   `€${deliveryCost.toFixed(2)}`,
+            total:          `€${total.toFixed(2)}`,
+            iban:           BANK_IBAN,
+            bankRecipient:  BANK_RECIPIENT,
+        });
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_CUSTOMER_TEMPLATE_ID, {
-            to_email:        email,
-            customer_name:   `${firstName} ${lastName}`,
-            order_number:    orderNum,
-            items:           itemsText,
-            delivery_method: deliveryLabels[delivery],
-            city:            city,
-            location:        location,
-            delivery_cost:   `€${deliveryCost.toFixed(2)}`,
-            total:           `€${total.toFixed(2)}`,
-            iban:            BANK_IBAN,
-            bank_recipient:  BANK_RECIPIENT
+            to_email:      email,
+            email_subject: customerEmail.subject,
+            message_html:  customerEmail.html,
         });
     } catch(e) {
         console.warn('Customer confirmation email failed:', e);
@@ -1051,7 +1099,7 @@ window.submitOrder = async function() {
     cart.length = 0;
     updateCartUI();
     btn.disabled = false;
-    btn.textContent = 'Підтвердити замовлення';
+    btn.textContent = (translations[currentLang] || {}).co_submit || 'Підтвердити замовлення';
 };
 
 function closeCheckout() {
